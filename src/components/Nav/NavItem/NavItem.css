@@ -1,0 +1,108 @@
+/* === General Nav Item === */
+.nav-links .nav-item {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius-medium);
+  transition: all 0.3s ease;
+}
+
+/* === Link === */
+.nav-links .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--color-dark-grey);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-links .nav-link .icon {
+  width: 1.75rem;
+  transition: all 0.3s ease;
+}
+
+.nav-links .nav-link .link-text {
+  display: inline;
+  width: 100%;
+}
+
+/* === Active Link Styling === */
+.nav-links .nav-link.active,
+.nav-links .nav-link.active:hover,
+.nav-links .nav-item.active > .nav-link {
+  color: var(--color-red);
+}
+
+.nav-links .nav-link.active .icon,
+.nav-links .nav-item.active .icon {
+  fill: var(--color-red);
+}
+
+/* === Hover & Active Background === */
+.nav-links .nav-item:hover,
+.nav-links .nav-item.active,
+.nav-links .nav-item.opened,
+.nav-links .nav-subitems .nav-item:has(.active) {
+  background-color: var(--color-light-grey);
+}
+
+/* === Parent Items (with children) === */
+.nav-links .nav-link.nav-parent {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links .nav-parent .link-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* === Subitems === */
+.nav-links .nav-parent .nav-subitems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-links .nav-subitems .nav-link {
+  padding-left: 3.5rem;
+  color: var(--color-mid-grey);
+}
+
+.nav-links .nav-subitems .nav-link.active,
+.nav-links .nav-subitems .nav-link.active:hover {
+  color: var(--color-dark-red);
+}
+
+.nav-links .nav-subitems .nav-link:hover {
+  color: var(--color-dark-grey);
+}
+
+/* === Chevron Icon === */
+.nav-links .chevron {
+  width: 12px;
+  height: 12px;
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+}
+
+.nav-links .chevron.rotated {
+  transform: rotate(270deg);
+}
+
+/* === Collapsed Sidebar === */
+.side-nav.collapsed .nav-link .link-text {
+  display: none;
+}
+
+.side-nav.collapsed .nav-links .nav-link {
+  justify-content: center;
+  padding: 0.4rem;
+}

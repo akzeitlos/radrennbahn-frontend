@@ -1,0 +1,208 @@
+/* ========================
+   📦 Sidebar Container
+========================= */
+.side-nav {
+  position: sticky;
+  height: 100vh;
+  width: 300px;
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* separates top and bottom sections */
+  z-index: 1000;
+  padding: 2rem;
+  box-shadow: var(--box-shadow);
+  top:0;
+}
+
+/* Collapsed sidebar state */
+.side-nav.collapsed {
+  width: 70px;
+  padding: 1rem;
+}
+
+/* ========================
+   🖼️ Logo
+========================= */
+.nav-logo {
+  margin-bottom: 3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.mobile-open .nav-logo {
+  max-width: 250px;
+}
+
+/* ========================
+   🔗 Navigation Links
+========================= */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ========================
+   ⬅️ Collapse Toggle Button
+========================= */
+.collapse-toggle {
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  transform: translateY(-50%);
+  background: var(--color-white);
+  border: none;
+  width: 40px;
+  height: 50px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0; /* Hidden by default */
+}
+
+/* Show collapse button on hover */
+.side-nav:hover .collapse-toggle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ========================
+   ➡️ Chevron Icon (used for toggle)
+========================= */
+.chevron-icon {
+  width: 16px;
+  height: 16px;
+  fill: var(--color-dark-grey);
+  transition: transform 0.3s ease;
+}
+
+/* Rotated state (for expanded sidebar) */
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* ========================
+   🔓 Logout Button Styles
+========================= */
+.logout-button {
+  background-color: var(--color-dark-grey);
+  color: var(--color-white);
+}
+
+/* Link text inside logout button */
+.logout-button button .link-text {
+  color: var(--color-white);
+  text-align: left;
+}
+
+/* Icon color in logout */
+.logout-button svg {
+  fill: var(--color-white);
+}
+
+/* Hover styles: invert colors */
+.logout-button:hover button .link-text {
+  color: var(--color-dark-grey);
+}
+
+.logout-button:hover svg {
+  fill: var(--color-dark-grey);
+}
+
+/* Hamburger button - hidden on desktop, shown on mobile */
+.hamburger-button {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  background: transparent;
+  border: none;
+  z-index: 1000; /* above everything */
+  cursor: pointer;
+  display: none; /* default hidden */
+  padding: 0;
+}
+
+/* Show hamburger only on small screens */
+@media (max-width: 768px) {
+  .hamburger-button {
+    display: block;
+    height: 1.5rem;
+    width: 1.5rem;
+    fill: var(--color-white);
+  }
+}
+
+/* Mobile sidebar open state */
+.side-nav.mobile-open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  padding: 2rem;
+  background-color: var(--color-white);
+  z-index: 1100; /* below hamburger but above rest */
+  box-shadow: var(--box-shadow);
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* When mobile sidebar not open, keep original desktop styles */
+/* Optionally hide it on mobile when not open */
+@media (max-width: 768px) {
+  .side-nav:not(.mobile-open) {
+    transform: translateX(-120%);
+    transition: transform 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300px; /* or collapsed width if desired */
+    z-index: 1000;
+  }
+}
+
+/* Mobile close button */
+.mobile-close-button {
+  display: none; /* hidden desktop */
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1201;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .mobile-close-button {
+    display: block;
+  }
+}
+
+/* Adjust padding/margin if sidebar collapsed on mobile */
+.side-nav.collapsed.mobile-open {
+  width: 100vw;
+  padding: 2rem;
+}
+
+
+@media (max-width: 768px) {
+  .collapse-toggle {
+    display: none !important;
+  }
+}

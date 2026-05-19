@@ -1,0 +1,16 @@
+services:
+  3lakustinizer-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: 3lakustinizer-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true

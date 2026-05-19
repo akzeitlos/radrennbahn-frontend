@@ -1,0 +1,47 @@
+:root {
+  /* === Color Variables === */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-light-grey: #f3f3f3;
+  --color-mid-grey: #888888;
+  --color-dark-grey: #444444;
+  --color-red: #ee353c;
+  --color-dark-red: #600000;
+
+  /* === Shadow === */
+  --box-shadow: 8px 6px 10px rgb(0 0 0 / 50%);
+
+  /* === Border Radius === */
+  --border-radius-small: 0.25rem;
+  --border-radius-medium: 0.5rem;
+  --border-radius-big: 0.75rem;
+}
+
+/* === Login Container Animation === */
+@keyframes fadeGrowIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation: Slide von rechts nach links */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

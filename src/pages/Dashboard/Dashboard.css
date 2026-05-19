@@ -1,0 +1,12 @@
+.dashboard-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.dashboard-container h1 {
+  margin-bottom: 1rem;
+}
+
+.dashboard-container p {
+  color: #555;
+}

@@ -1,0 +1,92 @@
+html, body {
+  overflow: hidden;
+}
+
+body{
+  font-family: "Open Sans";
+  font-weight: normal;
+  font-size: 1rem;
+  background-image: url("/src/assets/images/background.jpg"); /* Path to background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+/* Ensure root container fills the viewport */
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Ensure app container inherits full height */
+#App {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Style for displaying error messages in red */
+.error-message {
+  color: var(--color-red);
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Open Sans";
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+/* Aspect Ratios */
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-3-2 {
+  aspect-ratio: 3 / 2;
+}
+
+.aspect-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 600px) {
+  .aspect-4-3 {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+
+/* Button-Wrapper */
+.button-wrapper {
+  display:flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+.main-content {
+  margin-top: 3rem;
+}
+}

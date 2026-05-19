@@ -1,0 +1,37 @@
+.add-card {
+  all: unset;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px dashed var(--color-white);
+  border-radius: var(--border-radius-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  transition: all 0.3s ease;
+  font-size: 2rem;
+  width: 100%;
+}
+
+.add-card .icon {
+  fill: var(--color-white);
+  transition: all 0.3s ease;
+  height: 2rem;
+  width: 2rem;
+}
+
+.add-card:hover {
+  background-color: var(--color-white);
+  transform: translateY(-4px);
+
+}
+
+.add-card:hover .icon {
+  fill: var(--color-dark-grey);
+  transform: rotate(90deg);
+}
+
+.add-card span {
+  pointer-events: none;
+  user-select: none;
+}

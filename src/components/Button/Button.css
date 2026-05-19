@@ -1,0 +1,36 @@
+.button {
+  padding: .75rem 1rem;
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width:100%;
+}
+
+.primary-button {
+  background-color: var(--color-red);
+}
+
+.primary-button:hover {
+  background-color: var(--color-dark-red);
+}
+
+.secondary-button {
+  background-color: var(--color-light-grey);
+  color: var(--color-dark-grey);
+}
+
+.secondary-button:hover {
+  background-color: var(--color-dark-grey);
+  color: var(--color-white);
+}
+
+.danger-button {
+  background-color: var(--color-light-red);
+}
+
+.danger-button:hover {
+  background-color: var(--color-dark-red);
+}

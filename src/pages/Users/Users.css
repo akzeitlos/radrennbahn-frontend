@@ -1,0 +1,27 @@
+.users-card-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.users-card-container .card {
+  min-height: auto;
+}
+
+.users-card-container .add-card {
+  min-height: 95px;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button-wrapper {
+  width: 100%;
+}
+
+.card-edit {
+  min-height: unset;
+}
