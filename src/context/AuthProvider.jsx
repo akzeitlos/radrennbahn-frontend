@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback  } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { AuthContext } from "@/context/AuthContext.jsx";
 
 export function AuthProvider({ children }) {
-
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -11,20 +10,23 @@ export function AuthProvider({ children }) {
   const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   // fetchUser mit useCallback memoisieren
-  const fetchUser = useCallback(async (token) => {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(res.data.user);
-    } catch (err) {
-      console.error("Fehler beim Laden des Benutzers:", err);
-      removeAuthToken();
-    } finally {
-      setIsLoading(false);
-    }
-  }, [API_BASE_URL]); // API_BASE_URL als Abhängigkeit, falls es sich ändert
-  
+  const fetchUser = useCallback(
+    async (token) => {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data.user);
+      } catch (err) {
+        console.error("Fehler beim Laden des Benutzers:", err);
+        removeAuthToken();
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [API_BASE_URL],
+  ); // API_BASE_URL als Abhängigkeit, falls es sich ändert
+
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
 
@@ -35,7 +37,6 @@ export function AuthProvider({ children }) {
       setIsLoading(false);
     }
   }, [fetchUser]);
-
 
   function setAuthToken(tokenFromApi) {
     localStorage.setItem("token", tokenFromApi);
@@ -56,11 +57,12 @@ export function AuthProvider({ children }) {
       value={{
         token,
         user,
+        setUser,
         setAuthToken,
         removeAuthToken,
         isAuthenticated,
         isLoading,
-        fetchUser
+        fetchUser,
       }}
     >
       {children}

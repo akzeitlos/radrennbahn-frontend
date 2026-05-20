@@ -7,6 +7,7 @@ import ForgotPassword from "@/pages/Auth/ForgotPassword/ForgotPassword";
 import Roles from "@/pages/Roles/Roles";
 import Users from "@/pages/Users/Users";
 import Athletes from "@/pages/Athletes/Athletes.jsx";
+import Profile from "@/pages/Profile/Profile.jsx";
 import Clubs from "@/pages/Clubs/Clubs.jsx";
 import RaceClasses from "@/pages/RaceClasses/RaceClasses.jsx";
 import ResetPassword from "@/pages/Auth/ResetPassword/ResetPassword";
@@ -43,6 +44,15 @@ const RoutingController = ({ token, isAuthenticated }) => {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

@@ -40,13 +40,11 @@ function useUsers(token) {
           email: formData.email,
           username: formData.username,
           password: formData.password,
-          salutation: formData.salutation,
-          title: formData.title,
           firstname: formData.firstname,
           lastname: formData.lastname,
           roles: formData.roles,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setUsers((prev) => [...prev, response.data]);
       return { success: true, user: response.data };
@@ -67,23 +65,22 @@ function useUsers(token) {
     const payload = {
       email: formData.email,
       username: formData.username,
-      salutation: formData.salutation,
-      title: formData.title,
       firstname: formData.firstname,
       lastname: formData.lastname,
-      roles: formData.roles,
     };
+
+    if (formData.roles !== undefined) {
+      payload.roles = formData.roles;
+    }
 
     // Passwort nur mitschicken, wenn gesetzt
     if (formData.password?.length > 0) {
       payload.password = formData.password;
     }
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/users/${id}`,
-          payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.put(`${API_BASE_URL}/users/${id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsers((prev) => prev.map((u) => (u.id === id ? response.data : u)));
       return { success: true, user: response.data };
     } catch (err) {

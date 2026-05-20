@@ -9,6 +9,8 @@
   --color-light-blue: #b5dbf1;
   --color-blue: #004177;
   --color-red: #ee353c;
+  --color-light-green: #91c243;
+  --color-dark-green: #769e37;
 
   /* === Shadow === */
   --box-shadow: 8px 6px 10px rgb(0 0 0 / 50%);

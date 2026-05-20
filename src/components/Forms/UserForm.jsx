@@ -1,7 +1,30 @@
 import Input from "@/components/FormElements/Input/Input.jsx";
+import MultiSelect from "@/components/FormElements/MultiSelect/MultiSelect.jsx";
 import Button from "@/components/Button/Button.jsx";
 
-const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
+const UserForm = ({
+  formData,
+  onChange,
+  onSubmit,
+  onCancel,
+  roles,
+  error,
+}) => {
+    const handleMultiChange = (e) => {
+    const values = Array.from(e.target.selectedOptions).map((opt) =>
+      Number(opt.value),
+    );
+
+    onChange({
+      target: {
+        name: e.target.name,
+        value: values,
+      },
+    });
+  };
+
+
+
   return (
     <form className="form" onSubmit={onSubmit}>
       <Input
@@ -12,6 +35,7 @@ const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
         onChange={onChange}
         required
       />
+
       <Input
         name="username"
         label="Benutzername"
@@ -20,6 +44,7 @@ const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
         onChange={onChange}
         required
       />
+
       <Input
         name="firstname"
         label="Vorname"
@@ -28,6 +53,7 @@ const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
         onChange={onChange}
         required
       />
+
       <Input
         name="lastname"
         label="Nachname"
@@ -45,36 +71,22 @@ const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
         onChange={onChange}
       />
 
-      {/* Multi-select for Roles */}
-      <label htmlFor="roles">Rollen</label>
-      <select
+      <MultiSelect
+        label="Rollen"
         name="roles"
-        id="roles"
-        multiple
         value={formData.roles}
-        onChange={(e) => {
-          const selectedRoles = Array.from(e.target.selectedOptions).map(
-            (opt) => opt.value,
-          );
-          onChange({
-            target: {
-              name: "roles",
-              value: selectedRoles,
-            },
-          });
-        }}
-      >
-        {roles.map((role) => (
-          <option key={role.id} value={role.id}>
-            {role.name}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={roles.map((role) => ({
+          value: role.id,
+          label: role.name,
+        }))}
+      />
 
       <div className="button-wrapper">
         <Button type="submit" style="primary">
           Speichern
         </Button>
+
         <Button type="button" style="secondary" onClick={onCancel}>
           Abbrechen
         </Button>

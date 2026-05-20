@@ -14,7 +14,7 @@ import "./Users.css";
 
 const Users = () => {
   // Get the auth token from context to authenticate API calls
-  const { token } = useContext(AuthContext);
+  const { token, user, setUser } = useContext(AuthContext);
   // Load users and user management functions from the custom hook
   const { users, createUser, updateUser, deleteUser, error, isLoading } =
     useUsers(token);
@@ -83,6 +83,10 @@ const Users = () => {
       }
 
       if (result.success) {
+        if (editingUser && editingUser.id === user.id) {
+          setUser(result.user);
+        }
+
         setShowForm(false);
       }
     } catch (error) {
@@ -97,35 +101,35 @@ const Users = () => {
   }
 
   // Called when user clicks "Edit" on a user card
-const handleEdit = (user) => {
-  setEditingUser(user);
-  console.log("user",user);
-  setFormData({
-    email: user.email || "",
-    username: user.username || "",
-    firstname: user.firstname || "",
-    lastname: user.lastname || "",
-    password: "",
-    roles: user.roles?.map((role) => String(role.id)) || [],
-  });
-    console.log("formdata:",formData);
+  const handleEdit = (user) => {
+    setEditingUser(user);
+    console.log("user", user);
+    setFormData({
+      email: user.email || "",
+      username: user.username || "",
+      firstname: user.firstname || "",
+      lastname: user.lastname || "",
+      password: "",
+      roles: user.roles?.map((role) => role.id) || [],
+    });
+    console.log("formdata:", formData);
 
-  setShowForm(true);
-};
+    setShowForm(true);
+  };
 
   // Called when user clicks the "Add" button
-const handleAdd = () => {
-  setEditingUser(null);
-  setFormData({
-    email: "",
-    username: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    roles: [],
-  });
-  setShowForm(true);
-};
+  const handleAdd = () => {
+    setEditingUser(null);
+    setFormData({
+      email: "",
+      username: "",
+      firstname: "",
+      lastname: "",
+      password: "",
+      roles: [],
+    });
+    setShowForm(true);
+  };
 
   // Called when user clicks "Delete" on a card
   const handleDelete = (user) => {
@@ -172,22 +176,31 @@ const handleAdd = () => {
             // If this user is being edited, show the edit form inside a card
             if (isEditing) {
               return (
-                <UserEditCard
+                <Card
                   key={user.id}
-                  user={user}
-                  token={token}
-                  updateUser={updateUser}
-                  onCancel={() => {
-                    setShowForm(false);
-                    setEditingUser(null);
-                  }}
-                  onSave={() => {
-                    setShowForm(false);
-                    setEditingUser(null);
-                  }}
-                  roles={roles}
-                  error={error}
-                />
+                  title="Nutzer bearbeiten"
+                  extraClass="card-edit"
+                >
+                  <UserForm
+                    formData={formData}
+                    onChange={handleInputChange}
+                    onSubmit={handleSubmit}
+                    onCancel={() => {
+                      setShowForm(false);
+                      setEditingUser(null);
+                      setFormData({
+                        email: "",
+                        username: "",
+                        firstname: "",
+                        lastname: "",
+                        password: "",
+                        roles: [],
+                      });
+                    }}
+                    roles={roles}
+                    error={error}
+                  />
+                </Card>
               );
             }
 

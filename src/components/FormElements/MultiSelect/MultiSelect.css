@@ -1,135 +1,177 @@
-/* =========================
-   MULTI FIELD WRAPPER
-========================= */
 .multi-field {
   position: relative;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* =========================
-   LABEL (identisch zum Input)
-========================= */
+/* Die sichtbare Box */
+.multi-box {
+  border: 1px solid var(--color-dark-grey);
+  border-radius: var(--border-radius-small);
+  padding: 0 3.5rem 0 1rem; /* Platz rechts für Chevron */
+  font-size: 1.2rem;
+  background: var(--color-white);
+  cursor: pointer;
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  color: var(--color-dark-grey);
+  font-family: "Open Sans";
+
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+/* Focus-Effekt simulieren */
+.multi-field.is-open .multi-box {
+  border-color: var(--color-light-blue);
+}
+
+/* Platzhalter */
+.placeholder {
+  color: #aaa;
+}
+
+/* LABEL */
 .multi-field label {
   pointer-events: none;
   position: absolute;
   left: 0.75rem;
-  top: 1.85rem;
-  transform: translateY(-50%);
+  top: 0.1rem;
+
+  transition: all 0.2s ease-out;
+
   font-size: 1.2rem;
-  transition: all 0.2s ease;
   padding: 0 10px;
+
   color: var(--color-dark-grey);
   background: transparent;
+
   z-index: 2;
 }
 
-/* Floating Label State */
+/* Floating Label */
 .multi-field.is-open label,
 .multi-field.has-value label {
-  background: var(--color-white);
-  transform: translateY(-270%);
+  top: 0;
+  transform: translateY(-50%);
   font-size: 0.8rem;
-}
-
-/* =========================
-   MAIN SELECT BOX
-========================= */
-.multi-box {
-  border: 1px solid var(--color-dark-grey);
-  border-radius: var(--border-radius-small);
-  padding: 1rem;
-
-  font-size: 1.2rem;
-  line-height: 1.2rem;
-  font-family: "Open Sans";
-  color: var(--color-dark-grey);
-
   background: var(--color-white);
-
-  width: 100%;
-  min-height: 61px;
-
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-
-  cursor: pointer;
 }
 
-/* =========================
-   PLACEHOLDER TEXT
-========================= */
-.placeholder {
-  color: var(--color-mid-grey);
-  margin-top: .2rem
-}
-
-/* =========================
-   CHIPS (selected items)
-========================= */
+/* Container für Chips */
 .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  width: 100%;
 }
 
+/* Einzelner Chip */
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
   background: var(--color-light-blue);
   color: white;
 
-  padding: 0.2rem 0.6rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
 
-  font-size: 0.8rem;
+  font-size: 0.95rem;
+}
+
+/* X im Chip */
+.chip button {
+  border: none;
+  background: transparent;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 1rem;
+  line-height: 1;
 
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  justify-content: center;
+
+  padding: 0;
 }
 
-.chip button {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 0.9rem;
-  line-height: 1;
+/* Chevron Bereich */
+.multi-action-zone {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-/* =========================
-   DROPDOWN
-========================= */
+/* Chevron */
+.multi-field .chevron-icon {
+  width: 1rem;
+  height: 1rem;
+
+  fill: currentColor;
+  color: var(--color-dark-grey);
+
+  transform: rotate(90deg);
+  transition: transform 0.2s ease-in-out;
+
+  pointer-events: none;
+}
+
+.multi-field.is-open .chevron-icon {
+  transform: rotate(270deg);
+  color: var(--color-light-blue);
+}
+
+/* Dropdown */
 .dropdown {
   position: absolute;
-  top: calc(100% + 0.25rem);
+  top: 100%;
   left: 0;
   right: 0;
 
   background: var(--color-white);
+
   border: 1px solid var(--color-dark-grey);
   border-radius: var(--border-radius-small);
+
+  z-index: 10;
 
   max-height: 200px;
   overflow-y: auto;
 
-  z-index: 10;
+  margin-top: 4px;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* =========================
-   OPTIONS
-========================= */
+/* Option */
 .option {
-  padding: 1rem;
+  padding: 0.8rem 1rem;
   cursor: pointer;
-
-  font-size: 1.2rem;
-  color: var(--color-dark-grey);
+  font-size: 1.1rem;
 }
 
 .option:hover {
   background: #f2f2f2;
 }
 
+/* Aktiv */
 .option.active {
   background: var(--color-light-blue);
   color: white;

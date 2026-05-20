@@ -40,7 +40,7 @@
 }
 
 /* Der Chevron (unverändert) */
-.chevron-icon {
+.select-field .chevron-icon {
   width: 1rem;
   height: 1rem;
   fill: currentColor;
