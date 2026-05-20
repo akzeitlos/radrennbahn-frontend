@@ -6,7 +6,7 @@ body{
   font-family: "Open Sans";
   font-weight: normal;
   font-size: 1rem;
-  background-image: url("/src/assets/images/background.jpg"); /* Path to background image */
+  background-image: url("/src/assets/images/background.png"); /* Path to background image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -28,7 +28,7 @@ body{
 
 /* Style for displaying error messages in red */
 .error-message {
-  color: var(--color-red);
+  color: var(--color-light-blue);
 }
 
 .app-layout {
@@ -89,4 +89,34 @@ h6 {
 .main-content {
   margin-top: 3rem;
 }
+}
+
+/* Card Container */
+
+.card-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.card-container .card {
+  min-height: auto;
+}
+
+.card-container .add-card {
+  min-height: 95px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button-wrapper {
+  width: 100%;
+}
+
+.card-edit {
+  min-height: unset;
 }

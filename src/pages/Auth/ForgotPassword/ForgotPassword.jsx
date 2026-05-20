@@ -2,7 +2,6 @@ import { useState } from "react";
 import Input from "@/components/FormElements/Input/Input.jsx";
 import useAuth from "@/hooks/useAuth.jsx"; // Custom hook to handle auth logic
 import Button from "@/components/Button/Button.jsx";
-import Logo from "@/assets/logo/logo.svg";
 import "./ForgotPassword.css";
 import "../Auth.css";
 
@@ -29,8 +28,6 @@ function ForgotPassword() {
 
   return (
     <div className="auth-container">
-      {/* App logo */}
-      <img className="logo" src={Logo} alt="Logo" />
 
       {/* Password reset form */}
       <form className="auth-form" onSubmit={handleSubmit}>

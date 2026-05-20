@@ -23,11 +23,6 @@ body {
   gap: 1rem;
 }
 
-.logo {
-  max-width: 200px;
-  margin: 0 auto;
-}
-
 .error-message {
   text-align: center;
 }

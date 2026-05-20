@@ -6,6 +6,9 @@ import Login from "@/pages/Auth/Login/Login";
 import ForgotPassword from "@/pages/Auth/ForgotPassword/ForgotPassword";
 import Roles from "@/pages/Roles/Roles";
 import Users from "@/pages/Users/Users";
+import Athletes from "@/pages/Athletes/Athletes.jsx";
+import Clubs from "@/pages/Clubs/Clubs.jsx";
+import RaceClasses from "@/pages/RaceClasses/RaceClasses.jsx";
 import ResetPassword from "@/pages/Auth/ResetPassword/ResetPassword";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import AuthLayout from "@/components/AuthLayout/AuthLayout.jsx";
@@ -44,8 +47,8 @@ const RoutingController = ({ token, isAuthenticated }) => {
             }
           />
 
-          {/* Admin dashboard route for users with the 'backoffice' role */}
-          {userRoles.includes("Backoffice") && (
+          {/* Admin dashboard route for users with the 'admin' role */}
+          {userRoles.includes("admin") && (
             <>
               <Route
                 path="/roles"
@@ -60,6 +63,32 @@ const RoutingController = ({ token, isAuthenticated }) => {
                 element={
                   <ProtectedRoute>
                     <Users />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/athletes"
+                element={
+                  <ProtectedRoute>
+                    <Athletes />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/clubs"
+                element={
+                  <ProtectedRoute>
+                    <Clubs />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/race-classes"
+                element={
+                  <ProtectedRoute>
+                    <RaceClasses />
                   </ProtectedRoute>
                 }
               />

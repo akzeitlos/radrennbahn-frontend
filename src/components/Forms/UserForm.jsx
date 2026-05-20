@@ -3,8 +3,7 @@ import Button from "@/components/Button/Button.jsx";
 
 const UserForm = ({ formData, onChange, onSubmit, onCancel, roles, error }) => {
   return (
-    <form className="user-form" onSubmit={onSubmit}>
-      <h2>Benutzerdaten</h2>
+    <form className="form" onSubmit={onSubmit}>
       <Input
         name="email"
         label="E-Mail"

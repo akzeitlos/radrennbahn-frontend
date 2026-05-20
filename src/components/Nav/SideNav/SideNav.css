@@ -22,19 +22,6 @@
 }
 
 /* ========================
-   🖼️ Logo
-========================= */
-.nav-logo {
-  margin-bottom: 3rem;
-  text-align: center;
-  width: 100%;
-}
-
-.mobile-open .nav-logo {
-  max-width: 250px;
-}
-
-/* ========================
    🔗 Navigation Links
 ========================= */
 .nav-links {

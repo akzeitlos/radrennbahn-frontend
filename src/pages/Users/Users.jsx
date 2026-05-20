@@ -150,7 +150,7 @@ const handleAdd = () => {
       {isLoading ? (
         <LoadingSpinner /> // Spinner, Text oder Skeleton
       ) : (
-        <div className="users-card-container">
+        <div className="card-container">
           {/* Loop through each user and decide what UI to show for it */}
           {users.map((user) => {
             const isDeleting = userToDelete?.id === user.id;

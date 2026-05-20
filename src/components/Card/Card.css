@@ -27,7 +27,7 @@
 }
 
 .card-header h2 {
-  color: var(--color-dark-grey);
+  color: var(--color-blue);
 }
 
 .card-content {
@@ -71,7 +71,7 @@
 }
 
 .card-danger .danger-button:hover {
-  background-color: var(--color-dark-red); /* z. B. #ffe5e5 */
+  background-color: var(--color-blue); /* z. B. #ffe5e5 */
   color: var(--color-white);
 }
 

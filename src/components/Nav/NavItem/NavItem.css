@@ -35,12 +35,12 @@
 .nav-links .nav-link.active,
 .nav-links .nav-link.active:hover,
 .nav-links .nav-item.active > .nav-link {
-  color: var(--color-red);
+  color: var(--color-blue);
 }
 
 .nav-links .nav-link.active .icon,
 .nav-links .nav-item.active .icon {
-  fill: var(--color-red);
+  fill: var(--color-blue);
 }
 
 /* === Hover & Active Background === */
@@ -48,7 +48,7 @@
 .nav-links .nav-item.active,
 .nav-links .nav-item.opened,
 .nav-links .nav-subitems .nav-item:has(.active) {
-  background-color: var(--color-light-grey);
+  background-color: var(--color-light-blue);
 }
 
 /* === Parent Items (with children) === */
@@ -73,12 +73,12 @@
 
 .nav-links .nav-subitems .nav-link {
   padding-left: 3.5rem;
-  color: var(--color-mid-grey);
+  color: var(--color-dark-grey);
 }
 
 .nav-links .nav-subitems .nav-link.active,
 .nav-links .nav-subitems .nav-link.active:hover {
-  color: var(--color-dark-red);
+  color: var(--color-blue);
 }
 
 .nav-links .nav-subitems .nav-link:hover {

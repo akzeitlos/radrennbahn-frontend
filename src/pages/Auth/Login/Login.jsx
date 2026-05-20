@@ -5,8 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 import useAuth from "@/hooks/useAuth.jsx";
 import { AuthContext } from "@/context/AuthContext.jsx";
 
-// Logo import
-import Logo from "@/assets/logo/logo.svg";
 
 // Reusable UI components
 import Input from "@/components/FormElements/Input/Input.jsx";
@@ -62,8 +60,6 @@ function Login() {
 
   return (
     <div className="auth-container">
-      {/* App logo */}
-      <img className="logo" src={Logo} alt="Logo" />
 
       {/* Login form */}
       <form className="auth-form" onSubmit={handleLogin}>

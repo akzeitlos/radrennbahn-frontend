@@ -99,7 +99,7 @@ const Roles = () => {
       {isLoading ? (
         <LoadingSpinner />// Spinner, Text oder Skeleton
       ) : (
-        <div className="roles-card-container">
+        <div className="card-container">
           {/* Loop through each role and decide what UI to show for it */}
           {roles.map((role) => {
             const isDeleting = roleToDelete?.id === role.id;
@@ -124,7 +124,6 @@ const Roles = () => {
                 <Card
                   key={role.id}
                   title="Rolle bearbeiten"
-                  aspectRatio="aspect-3-2"
                   extraClass="card-edit"
                 >
                   <RoleForm
@@ -146,7 +145,6 @@ const Roles = () => {
               <Card
                 key={role.id}
                 title={role.name}
-                aspectRatio="aspect-3-2"
                 onEdit={() => handleEdit(role)}
                 onDelete={() => handleDelete(role)}
               >
@@ -159,7 +157,6 @@ const Roles = () => {
           {showForm && !editingRole ? (
             <Card
               title="Neue Rolle"
-              aspectRatio="aspect-3-2"
               extraClass="card-edit"
             >
               <RoleForm
@@ -176,7 +173,7 @@ const Roles = () => {
             </Card>
           ) : (
             // If form is not shown, render the "Add New Role" card
-            <AddCard onClick={handleAdd} aspectRatio="aspect-3-2" />
+            <AddCard onClick={handleAdd} />
           )}
         </div>
       )}

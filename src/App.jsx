@@ -10,7 +10,7 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
 import "./styles/variables.css";
 import "./styles/fonts.css";
 import "./styles/clearing.css";
-import "./app.css";
+import "./App.css";
 
 // Inline definierte AppContent-Komponente
 const AppContent = () => {

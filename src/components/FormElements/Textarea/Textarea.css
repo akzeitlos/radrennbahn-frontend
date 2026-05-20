@@ -44,5 +44,5 @@
 
 /* Optional: Red outline on focus */
 .textarea-field textarea:focus-visible {
-  outline: 1px solid var(--color-red);
+  outline: 1px solid var(--color-light-blue);
 }

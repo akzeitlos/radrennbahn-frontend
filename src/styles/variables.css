@@ -6,8 +6,9 @@
   --color-light-grey: #f3f3f3;
   --color-mid-grey: #888888;
   --color-dark-grey: #444444;
+  --color-light-blue: #b5dbf1;
+  --color-blue: #004177;
   --color-red: #ee353c;
-  --color-dark-red: #600000;
 
   /* === Shadow === */
   --box-shadow: 8px 6px 10px rgb(0 0 0 / 50%);

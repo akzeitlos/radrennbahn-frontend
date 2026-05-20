@@ -25,7 +25,7 @@ label {
   cursor: text;
   line-height: 100%;
   left: 0.75rem;
-  top: 0rem;
+  top: 0.1rem;
   font-size: 1.2rem;
   position: absolute;
   transform: translateY(100%);
@@ -35,15 +35,15 @@ label {
 }
 
 /* Label moves up and shrinks when input is focused or filled */
-.input-field input:not(:invalid) + label,
-.input-field input:focus + label {
+.input-field input:focus + label,
+.input-field input.filled + label {
   background: var(--color-white);
-  transform: translateY(-50%);
+  transform: translateY(-60%);
   font-size: 0.8rem;
   color: var(--color-dark-grey);
 }
 
 /* Red outline on input focus */
 input:focus-visible {
-  outline: 1px solid var(--color-red);
+  border: 1px solid var(--color-light-blue);
 }

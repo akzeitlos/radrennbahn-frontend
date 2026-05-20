@@ -1,0 +1,136 @@
+/* =========================
+   MULTI FIELD WRAPPER
+========================= */
+.multi-field {
+  position: relative;
+  width: 100%;
+}
+
+/* =========================
+   LABEL (identisch zum Input)
+========================= */
+.multi-field label {
+  pointer-events: none;
+  position: absolute;
+  left: 0.75rem;
+  top: 1.85rem;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  padding: 0 10px;
+  color: var(--color-dark-grey);
+  background: transparent;
+  z-index: 2;
+}
+
+/* Floating Label State */
+.multi-field.is-open label,
+.multi-field.has-value label {
+  background: var(--color-white);
+  transform: translateY(-270%);
+  font-size: 0.8rem;
+}
+
+/* =========================
+   MAIN SELECT BOX
+========================= */
+.multi-box {
+  border: 1px solid var(--color-dark-grey);
+  border-radius: var(--border-radius-small);
+  padding: 1rem;
+
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  font-family: "Open Sans";
+  color: var(--color-dark-grey);
+
+  background: var(--color-white);
+
+  width: 100%;
+  min-height: 61px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  cursor: pointer;
+}
+
+/* =========================
+   PLACEHOLDER TEXT
+========================= */
+.placeholder {
+  color: var(--color-mid-grey);
+  margin-top: .2rem
+}
+
+/* =========================
+   CHIPS (selected items)
+========================= */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  background: var(--color-light-blue);
+  color: white;
+
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+
+  font-size: 0.8rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.chip button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+
+  background: var(--color-white);
+  border: 1px solid var(--color-dark-grey);
+  border-radius: var(--border-radius-small);
+
+  max-height: 200px;
+  overflow-y: auto;
+
+  z-index: 10;
+}
+
+/* =========================
+   OPTIONS
+========================= */
+.option {
+  padding: 1rem;
+  cursor: pointer;
+
+  font-size: 1.2rem;
+  color: var(--color-dark-grey);
+}
+
+.option:hover {
+  background: #f2f2f2;
+}
+
+.option.active {
+  background: var(--color-light-blue);
+  color: white;
+}

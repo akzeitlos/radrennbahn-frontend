@@ -6,10 +6,7 @@ import NavItem from "@/components/Nav/NavItem/NavItem";
 
 // Import SVG icons as React components
 import Dashboard from "@/assets/icons/dashboard.svg?react";
-import Projects from "@/assets/icons/projects.svg?react";
-import Illness from "@/assets/icons/illness.svg?react";
-import Vacation from "@/assets/icons/vacation.svg?react";
-import Settings from "@/assets/icons/settings.svg?react";
+import Athletes from "@/assets/icons/athletes.svg?react";
 import Logout from "@/assets/icons/logout.svg?react";
 import Profile from "@/assets/icons/profile.svg?react";
 import Users from "@/assets/icons/users.svg?react";
@@ -19,11 +16,8 @@ import Chevron from "@/assets/icons/chevron.svg?react";
 import Hamburger from "@/assets/icons/bars.svg?react"; // <-- create or add 3 bars icon SVG
 import CloseIcon from "@/assets/icons/close.svg?react"; // <-- add close icon SVG for mobile
 
-// Import styles and logos
+// Import styles
 import "./SideNav.css";
-import Logo from "@/assets/logo/logo.svg";
-import LogoSmall from "@/assets/logo/logoSmall.svg";
-
 
 export default function SideNav() {
   const navigate = useNavigate();
@@ -87,43 +81,35 @@ export default function SideNav() {
         >
           <CloseIcon />
         </button>
-        {/* === Top Section: Logo and Main Navigation === */}
+        {/* === Top Section: Main Navigation === */}
         <div className="nav-top">
-          <div className="nav-logo">
-            <img
-              src={isCollapsed ? LogoSmall : Logo} // Show small logo when collapsed
-              alt="Logo"
-              className="logo-image"
-            />
-          </div>
-
           <ul className="nav-links">
             {/* Main nav links */}
             <NavItem to="/" end Icon={Dashboard} label="Dashboard" />
 
-            {/* Projects with nested links */}
-            <NavItem Icon={Projects} label="Projekte" subMenuKey="projects">
-              <NavItem to="/Test1" label="Test1" />
-              <NavItem to="/Test2" label="Test2" />
+            <NavItem
+              Icon={Athletes}
+              label="Sportler"
+              subMenuKey="athletes"
+            >
+              <NavItem to="/athletes" label="Athleten" />
+
+              <NavItem to="/clubs" label="Vereine" />
+
+              <NavItem to="/race-classes" label="Rennklassen" />
             </NavItem>
-
-            <NavItem to="/illness" Icon={Illness} label="Krankmeldung" />
-            <NavItem to="/vacation" Icon={Vacation} label="Urlaub" />
-
-            {user?.roles.includes("Backoffice") && (
-              <NavItem Icon={Users} label="Nutzerverwaltung" subMenuKey="users">
-                <NavItem to="/users" label="Nutzer" />
-                <NavItem to="/roles" label="Nutzergruppen" />
-                <NavItem to="/sections" label="Teilbereiche" />
-              </NavItem>
-            )}
           </ul>
         </div>
 
         {/* === Bottom Section: Settings, Profile, Logout === */}
         <div className="nav-bottom">
           <ul className="nav-links">
-            <NavItem to="/settings" Icon={Settings} label="Settings" />
+            {user?.roles.includes("admin") && (
+              <NavItem Icon={Users} label="Nutzerverwaltung" subMenuKey="users">
+                <NavItem to="/users" label="Nutzer" />
+                <NavItem to="/roles" label="Nutzergruppen" />
+              </NavItem>
+            )}
             <NavItem to="/profile" Icon={Profile} label="Profile" />
 
             {/* Logout button styled like a nav item */}

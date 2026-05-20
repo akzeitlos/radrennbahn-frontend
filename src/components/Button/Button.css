@@ -1,6 +1,6 @@
 .button {
   padding: .75rem 1rem;
-  color: white;
+  color: var(--color-blue);
   border: none;
   border-radius: var(--border-radius-small);
   cursor: pointer;
@@ -10,11 +10,13 @@
 }
 
 .primary-button {
-  background-color: var(--color-red);
+  background-color: var(--color-light-blue);
 }
 
 .primary-button:hover {
-  background-color: var(--color-dark-red);
+  background-color: var(--color-blue);
+    color: var(--color-white);
+
 }
 
 .secondary-button {
@@ -32,5 +34,5 @@
 }
 
 .danger-button:hover {
-  background-color: var(--color-dark-red);
+  background-color: var(--color-blue);
 }

@@ -8,8 +8,7 @@ import Button from "@/components/Button/Button.jsx";
 // Custom authentication hook
 import useAuth from "@/hooks/useAuth.jsx";
 
-// Logo and styles
-import Logo from "@/assets/logo/logo.svg";
+// Styles
 import "./ResetPassword.css";
 import "../Auth.css";
 
@@ -53,8 +52,6 @@ function ResetPassword() {
 
   return (
     <div className="auth-container">
-      {/* App logo */}
-      <img className="logo" src={Logo} alt="Logo" />
 
       {/* Password reset form */}
       <form className="auth-form" onSubmit={handleSubmit}>
