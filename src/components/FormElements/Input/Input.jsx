@@ -1,10 +1,7 @@
-// Import input-specific styles
 import "./Input.css";
 
-// Reusable input component with label support
-function Input({ label, name, type = "text", required = false, value, onChange }) {
-  // Prüfen, ob das Feld Text enthält (wichtig bei kontrollierten Komponenten)
-  const isFilled = value && value.toString().length > 0;
+function Input({ label, name, type = "text", required = false, value, onChange, placeholder }) {
+  const isFilled = type === "date" || (value && value.toString().length > 0);
 
   return (
     <div className="input-field">
@@ -14,7 +11,8 @@ function Input({ label, name, type = "text", required = false, value, onChange }
         required={required}
         value={value}
         onChange={onChange}
-        className={isFilled ? "filled" : ""} // <-- Klasse dynamisch vergeben
+        placeholder={placeholder}
+        className={isFilled ? "filled" : ""}
       />
       {label && <label htmlFor={name}>{label}</label>}
     </div>

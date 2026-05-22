@@ -1,26 +1,27 @@
 import Input from "@/components/FormElements/Input/Input.jsx";
-import Textarea from "@/components/FormElements/Textarea/Textarea.jsx";
 import Button from "@/components/Button/Button.jsx";
 
 const toSlug = (str) =>
   str
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")  // Umlaute auflösen: ä→a, ö→o etc.
     .replace(/ß/g, "ss")
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-");
 
-const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
+const RaceModeForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
 
-  const handleNameChange = (e) => {
-    const name = e.target.value;
-    onChange({ target: { name: "name", value: name } });
-    onChange({ target: { name: "slug", value: toSlug(name) } });
+  const handleTitleChange = (e) => {
+    const title = e.target.value;
+    onChange({ target: { name: "title", value: title } });
+    // Slug nur auto-generieren wenn noch leer oder bisher auto-generiert
+    onChange({ target: { name: "slug", value: toSlug(title) } });
   };
 
   const handleSlugChange = (e) => {
+    // Slug manuell überschreiben — direkt nur erlaubte Zeichen zulassen
     const clean = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
     onChange({ target: { name: "slug", value: clean } });
   };
@@ -28,43 +29,41 @@ const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
   return (
     <form className="form" onSubmit={onSubmit}>
       <Input
-        name="name"
-        label="Name"
+        name="title"
+        label="Titel"
         type="text"
-        value={formData.name}
-        onChange={handleNameChange}
+        value={formData.title}
+        onChange={handleTitleChange}
         required
       />
 
       <Input
         name="slug"
-        label="Slug (Kurzname)"
+        label="Slug (z.B. punkterennen)"
         type="text"
         value={formData.slug}
         onChange={handleSlugChange}
         required
       />
 
-      <Textarea
+      <Input
         name="description"
         label="Beschreibung"
+        type="text"
         value={formData.description}
         onChange={onChange}
-        placeholder="Beschreibung der Rennklasse"
       />
 
-      <div className="button-wrapper">
-        <Button type="submit" style="primary">
-          Speichern
-        </Button>
-        <Button type="button" style="secondary" onClick={onCancel}>
-          Abbrechen
-        </Button>
-      </div>
+      <Button type="submit" style="primary">
+        Speichern
+      </Button>
+      <Button type="button" style="secondary" onClick={onCancel}>
+        Abbrechen
+      </Button>
 
       {error && <p className="error-message">{error}</p>}
     </form>
   );
 };
 
-export default RaceClassForm;
+export default RaceModeForm;

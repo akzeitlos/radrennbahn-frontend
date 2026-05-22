@@ -16,6 +16,7 @@ export default function NavItem({
   label, // Display label
   children, // Optional subitems if this is a parent item
   subMenuKey,
+  activePaths,
 }) {
   const location = useLocation();
   const {
@@ -37,8 +38,8 @@ export default function NavItem({
     .map((child) => child?.props?.to)
     .filter(Boolean); // Only keep strings
 
-  const isSubRouteActive = childRoutes.some((path) =>
-    location.pathname.startsWith(path)
+  const isSubRouteActive = (activePaths || childRoutes).some((path) =>
+    location.pathname.startsWith(path),
   );
 
   /**

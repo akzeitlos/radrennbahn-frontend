@@ -1,0 +1,65 @@
+.cs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-label {
+  pointer-events: none;
+  font-size: 0.8rem;
+  font-weight: 400;
+  padding: 0 10px;
+  color: var(--color-dark-grey);
+}
+
+.cs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cs-empty {
+  font-size: 1.1rem;
+  color: var(--color-white);
+  font-style: italic;
+  padding: 0.8rem 1rem;
+}
+
+/* Inaktiver Chip — wie Option im Dropdown */
+.cs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-dark-grey) !important;
+  background: transparent;
+  color: var(--color-dark-grey);
+  font-family: "Open Sans";
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.cs-chip:hover {
+  background: var(--color-light-blue);
+  border-color: var(--color-light-blue) !important;
+}
+
+/* Aktiver Chip — wie aktive Option im Dropdown */
+.cs-chip--active {
+  background: var(--color-light-blue);
+  color: var(--color-blue);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  border-color: var(--color-light-blue) !important;
+}
+
+.cs-chip__remove {
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-blue);
+}

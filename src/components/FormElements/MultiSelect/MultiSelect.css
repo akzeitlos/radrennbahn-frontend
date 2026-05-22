@@ -78,7 +78,7 @@
   gap: 0.35rem;
 
   background: var(--color-light-blue);
-  color: white;
+  color: var(--color-blue);
 
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
@@ -90,7 +90,7 @@
 .chip button {
   border: none;
   background: transparent;
-  color: white;
+  color: var(--color-blue);
 
   cursor: pointer;
 
@@ -148,7 +148,7 @@
   background: var(--color-white);
 
   border: 1px solid var(--color-dark-grey);
-  border-radius: var(--border-radius-small);
+  border-radius: var(--border-radius-medium);
 
   z-index: 10;
 

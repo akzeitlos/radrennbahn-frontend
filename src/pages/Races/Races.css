@@ -1,0 +1,162 @@
+.race-form__danish {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.race-form h4 {
+  color: var(--color-blue);
+}
+
+.race-form__danish h3 {
+  margin: 0;
+}
+
+.race-form__danish-round {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.race-form__danish-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .race-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .race-form__danish-round {
+    grid-template-columns: 1fr;
+  }
+}
+
+.race-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==============================
+   Abschnitte
+============================== */
+.race-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.race-form__section-title {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text, #333);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  padding-bottom: 0.4rem;
+}
+
+.race-form__section--actions {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* ==============================
+   2-Spalten Grid für Inputs
+============================== */
+.race-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .race-form__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==============================
+   Dänisches Punktegrid
+============================== */
+.race-form__danish {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.race-form__danish-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.race-form__danish-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.race-form__danish-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.race-form__danish-grid {
+  display: grid;
+  gap: 0.375rem;
+  overflow-x: auto;
+}
+
+.race-form__danish-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  min-width: 3rem;
+}
+
+.race-form__danish-cell--header {
+  font-weight: 700;
+  color: var(--color-text-secondary, #666);
+  white-space: nowrap;
+}
+
+.race-form__danish-cell--label {
+  font-weight: 600;
+  justify-content: flex-start;
+  white-space: nowrap;
+  color: var(--color-text, #333);
+}
+
+.race-form__danish-cell--input {
+  width: 100%;
+  border: 1.5px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  padding: 0.3rem 0.4rem;
+  text-align: center;
+  font-size: 0.875rem;
+  background: var(--color-input-bg, #fff);
+  color: var(--color-text, #333);
+  transition: border-color 0.15s;
+}
+
+.race-form__danish-cell--input:focus {
+  outline: none;
+  border-color: var(--color-primary, #4f46e5);
+}
+
+.race-form__hint {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #999);
+  font-style: italic;
+  margin: 0;
+}

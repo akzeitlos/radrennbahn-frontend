@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext.jsx";
-import { SideNavContext } from "@/context/SideNavContext"; // Adjust the path
+import { SideNavContext } from "@/context/SideNavContext";
 import NavItem from "@/components/Nav/NavItem/NavItem";
 
 // Import SVG icons as React components
@@ -11,34 +11,33 @@ import Logout from "@/assets/icons/logout.svg?react";
 import Profile from "@/assets/icons/profile.svg?react";
 import Users from "@/assets/icons/users.svg?react";
 import Chevron from "@/assets/icons/chevron.svg?react";
+import Races from "@/assets/icons/races.svg?react";
 
 // Icons
-import Hamburger from "@/assets/icons/bars.svg?react"; // <-- create or add 3 bars icon SVG
-import CloseIcon from "@/assets/icons/close.svg?react"; // <-- add close icon SVG for mobile
+import Hamburger from "@/assets/icons/bars.svg?react";
+import CloseIcon from "@/assets/icons/close.svg?react";
 
 // Import styles
 import "./SideNav.css";
 
 export default function SideNav() {
   const navigate = useNavigate();
-  const { removeAuthToken, user } = useContext(AuthContext); // Access logout logic from auth context
+  const { removeAuthToken, user } = useContext(AuthContext);
 
-  const [isCollapsed, setIsCollapsed] = useState(false); // State for collapsed sidebar
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSubMenuKey, setOpenSubMenuKey] = useState(null);
-  // Logout logic: remove token and redirect to login
+
   const handleLogout = () => {
     removeAuthToken();
     navigate("/login");
-    setMobileOpen(false); // close mobile sidebar on logout
+    setMobileOpen(false);
   };
 
-  // Toggle sidebar collapse state
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  // Close mobile sidebar on window resize to desktop size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768 && mobileOpen) {
@@ -48,6 +47,7 @@ export default function SideNav() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [mobileOpen]);
+
   return (
     <SideNavContext.Provider
       value={{
@@ -59,7 +59,6 @@ export default function SideNav() {
         setOpenSubMenuKey,
       }}
     >
-      {/* Hamburger menu visible only on mobile */}
       <button
         className="hamburger-button"
         onClick={() => setMobileOpen(true)}
@@ -73,7 +72,6 @@ export default function SideNav() {
           mobileOpen ? "mobile-open" : ""
         }`}
       >
-        {/* Close button only on mobile */}
         <button
           className="mobile-close-button"
           onClick={() => setMobileOpen(false)}
@@ -81,27 +79,28 @@ export default function SideNav() {
         >
           <CloseIcon />
         </button>
-        {/* === Top Section: Main Navigation === */}
+
         <div className="nav-top">
           <ul className="nav-links">
-            {/* Main nav links */}
             <NavItem to="/" end Icon={Dashboard} label="Dashboard" />
 
-            <NavItem
-              Icon={Athletes}
-              label="Sportler"
-              subMenuKey="athletes"
-            >
+            <NavItem Icon={Athletes} label="Sportler" subMenuKey="athletes">
               <NavItem to="/athletes" label="Athleten" />
-
               <NavItem to="/clubs" label="Vereine" />
+            </NavItem>
 
-              <NavItem to="/race-classes" label="Rennklassen" />
+            <NavItem Icon={Races} label="Rennen" subMenuKey="races" activePaths={["/races", "/race-modes", "/race-classes"]}>
+              <NavItem to="/races" label="Rennen" />
+              {user?.roles.includes("admin") && (
+                <>
+                  <NavItem to="/race-modes" label="Rennmodi" />
+                  <NavItem to="/race-classes" label="Rennklassen" />
+                </>
+              )}
             </NavItem>
           </ul>
         </div>
 
-        {/* === Bottom Section: Settings, Profile, Logout === */}
         <div className="nav-bottom">
           <ul className="nav-links">
             {user?.roles.includes("admin") && (
@@ -112,7 +111,6 @@ export default function SideNav() {
             )}
             <NavItem to="/profile" Icon={Profile} label="Profile" />
 
-            {/* Logout button styled like a nav item */}
             <li className="logout-button nav-item">
               <button className="nav-link" onClick={handleLogout}>
                 <Logout className="icon" />
@@ -122,7 +120,6 @@ export default function SideNav() {
           </ul>
         </div>
 
-        {/* Collapse toggle button (desktop only) */}
         {!mobileOpen && (
           <button
             className="collapse-toggle"
