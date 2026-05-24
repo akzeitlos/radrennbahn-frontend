@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "@/components/Card/Card.jsx";
 import AddCard from "@/components/AddCard/AddCard.jsx";
 import DeleteCard from "@/components/DeleteCard/DeleteCard.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
+import Button from "@/components/Button/Button.jsx";
 
 import RaceForm from "@/components/Forms/RaceForm.jsx";
 import useRaces from "@/hooks/useRaces.jsx";
@@ -33,9 +35,17 @@ const emptyForm = {
 
 const Races = () => {
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const { races, createRace, updateRace, deleteRace, isLoading, error } =
-    useRaces(token);
+  const {
+    races,
+    createRace,
+    updateRace,
+    deleteRace,
+    completeRace,
+    isLoading,
+    error,
+  } = useRaces(token);
 
   const { raceModes } = useRaceModes(token);
   const { raceClasses } = useRaceClasses(token);
@@ -51,21 +61,28 @@ const Races = () => {
 
     // Wenn Rennklassen geändert werden, Athleten der abgewählten Klassen entfernen
     if (name === "raceClasses") {
-      const removedClassIds = formData.raceClasses.filter((id) => !value.includes(id));
+      const removedClassIds = formData.raceClasses.filter(
+        (id) => !value.includes(id),
+      );
 
       if (removedClassIds.length > 0) {
         const athletesToRemove = athletes
-          .filter((a) =>
-            a.raceClasses?.some((rc) => removedClassIds.includes(rc.id)) &&
-            !a.raceClasses?.some((rc) => value.includes(rc.id))
+          .filter(
+            (a) =>
+              a.raceClasses?.some((rc) => removedClassIds.includes(rc.id)) &&
+              !a.raceClasses?.some((rc) => value.includes(rc.id)),
           )
           .map((a) => a.id);
 
         const updatedAthletes = formData.athletes.filter(
-          (id) => !athletesToRemove.includes(id)
+          (id) => !athletesToRemove.includes(id),
         );
 
-        setFormData((prev) => ({ ...prev, raceClasses: value, athletes: updatedAthletes }));
+        setFormData((prev) => ({
+          ...prev,
+          raceClasses: value,
+          athletes: updatedAthletes,
+        }));
         return;
       }
 
@@ -82,8 +99,18 @@ const Races = () => {
         slug === "points"
           ? { pointsFirst: 5, pointsSecond: 3, pointsThird: 2, pointsFourth: 1 }
           : slug === "tempo"
-          ? { pointsFirst: 2, pointsSecond: 1, pointsThird: "", pointsFourth: "" }
-          : { pointsFirst: "", pointsSecond: "", pointsThird: "", pointsFourth: "" };
+            ? {
+                pointsFirst: 2,
+                pointsSecond: 1,
+                pointsThird: "",
+                pointsFourth: "",
+              }
+            : {
+                pointsFirst: "",
+                pointsSecond: "",
+                pointsThird: "",
+                pointsFourth: "",
+              };
 
       setFormData((prev) => ({ ...prev, [name]: value, ...pointDefaults }));
       return;
@@ -109,9 +136,13 @@ const Races = () => {
         ? Number(formData.lapdownPointsLoss)
         : null,
       pointsFirst: formData.pointsFirst ? Number(formData.pointsFirst) : null,
-      pointsSecond: formData.pointsSecond ? Number(formData.pointsSecond) : null,
+      pointsSecond: formData.pointsSecond
+        ? Number(formData.pointsSecond)
+        : null,
       pointsThird: formData.pointsThird ? Number(formData.pointsThird) : null,
-      pointsFourth: formData.pointsFourth ? Number(formData.pointsFourth) : null,
+      pointsFourth: formData.pointsFourth
+        ? Number(formData.pointsFourth)
+        : null,
     };
 
     let result;
@@ -164,57 +195,66 @@ const Races = () => {
         <LoadingSpinner />
       ) : (
         <div className="card-container">
-          {[...races].sort((a, b) => new Date(a.date) - new Date(b.date)).map((race) => {
-            // 1. LÖSCH-ZUSTAND
-            if (raceToDelete?.id === race.id) {
+          {[...races]
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .map((race) => {
+              // 1. LÖSCH-ZUSTAND
+              if (raceToDelete?.id === race.id) {
+                return (
+                  <DeleteCard
+                    key={race.id}
+                    item={race}
+                    title="Rennen"
+                    onConfirm={confirmDelete}
+                    onCancel={() => setRaceToDelete(null)}
+                  />
+                );
+              }
+
+              // 2. EDITIER-ZUSTAND
+              if (editingRace?.id === race.id && showForm) {
+                return (
+                  <Card
+                    key={race.id}
+                    title="Rennen bearbeiten"
+                    extraClass="card-edit"
+                  >
+                    <RaceForm
+                      formData={formData}
+                      onChange={handleInputChange}
+                      onSubmit={handleSubmit}
+                      onCancel={() => {
+                        setShowForm(false);
+                        setEditingRace(null);
+                        setFormData(emptyForm);
+                      }}
+                      raceModes={raceModes}
+                      raceClasses={raceClasses}
+                      athletes={athletes}
+                      error={error}
+                    />
+                  </Card>
+                );
+              }
+
+              // 3. NORMALER ZUSTAND
+              const [year, month, day] = (race.date || "").split("-");
+              const formattedDate = race.date ? `${day}.${month}.${year}` : "-";
+              const raceClassNames =
+                race.raceClasses?.map((rc) => rc.name).join(", ") || "";
+
               return (
-                <DeleteCard
+                <Card
                   key={race.id}
-                  item={race}
-                  title="Rennen"
-                  onConfirm={confirmDelete}
-                  onCancel={() => setRaceToDelete(null)}
+                  title={`${formattedDate}${raceClassNames ? ` · ${raceClassNames}` : ""}`}
+                  subtitle={race.raceMode?.title || "-"}
+                  onPlay={() => navigate(`/races/${race.id}/session`)}
+                  isCompleted={race.isCompleted}
+                  onEdit={() => handleEdit(race)}
+                  onDelete={() => handleDelete(race)}
                 />
               );
-            }
-
-            // 2. EDITIER-ZUSTAND
-            if (editingRace?.id === race.id && showForm) {
-              return (
-                <Card key={race.id} title="Rennen bearbeiten" extraClass="card-edit">
-                  <RaceForm
-                    formData={formData}
-                    onChange={handleInputChange}
-                    onSubmit={handleSubmit}
-                    onCancel={() => {
-                      setShowForm(false);
-                      setEditingRace(null);
-                      setFormData(emptyForm);
-                    }}
-                    raceModes={raceModes}
-                    raceClasses={raceClasses}
-                    athletes={athletes}
-                    error={error}
-                  />
-                </Card>
-              );
-            }
-
-            // 3. NORMALER ZUSTAND
-            const [year, month, day] = (race.date || "").split("-");
-            const formattedDate = race.date ? `${day}.${month}.${year}` : "-";
-            const raceClassNames = race.raceClasses?.map((rc) => rc.name).join(", ") || "";
-
-            return (
-              <Card
-                key={race.id}
-                title={`${formattedDate}${raceClassNames ? ` · ${raceClassNames}` : ""}`}
-                subtitle={race.raceMode?.title || "-"}
-                onEdit={() => handleEdit(race)}
-                onDelete={() => handleDelete(race)}
-              />
-            );
-          })}
+            })}
 
           {showForm && !editingRace ? (
             <Card title="Neues Rennen" extraClass="card-edit">

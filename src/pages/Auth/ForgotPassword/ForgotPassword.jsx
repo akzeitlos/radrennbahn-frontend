@@ -39,7 +39,7 @@ function ForgotPassword() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <Button type="submit" style="primary">
+        <Button type="submit" style="primary" fullWidth="true">
           Passwort zurücksetzen
         </Button>
       </form>

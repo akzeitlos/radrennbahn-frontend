@@ -139,7 +139,6 @@
 
 .race-form__danish-cell--input {
   width: 100%;
-  border: 1.5px solid var(--color-border, #ccc);
   border-radius: 6px;
   padding: 0.3rem 0.4rem;
   text-align: center;

@@ -13,6 +13,93 @@ import { AuthContext } from "@/context/AuthContext.jsx";
 
 import "./Athletes.css";
 
+// ==============================
+// Rennhistorie-Klappelement
+// ==============================
+const RaceHistoryPanel = ({ athleteId, fetchAthleteRaceHistory }) => {
+  const [open, setOpen] = useState(false);
+  const [races, setRaces] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const toggle = async () => {
+    if (!open && races === null) {
+      setLoading(true);
+      const result = await fetchAthleteRaceHistory(athleteId);
+      setRaces(result.races);
+      setLoading(false);
+    }
+    setOpen((v) => !v);
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const [y, m, d] = dateStr.split("-");
+    return `${d}.${m}.${y}`;
+  };
+
+  const formatResult = (pivot) => {
+    if (!pivot) return "";
+    if (pivot.dnf) return "DNF";
+    if (pivot.eliminated) return "Ausgeschieden";
+    if (pivot.finalPosition) return `Platz ${pivot.finalPosition}`;
+    return "-";
+  };
+
+  return (
+    <div className="athlete-history">
+      <button className="athlete-history__toggle" onClick={toggle}>
+        {open ? "▲" : "▼"} Rennhistorie
+      </button>
+
+      {open && (
+        <div className="athlete-history__panel">
+          {loading ? (
+            <p className="athlete-history__empty">Lade …</p>
+          ) : !races || races.length === 0 ? (
+            <p className="athlete-history__empty">Noch keine Rennen eingetragen.</p>
+          ) : (
+            <table className="athlete-history__table">
+              <thead>
+                <tr>
+                  <th>Datum</th>
+                  <th>Modus</th>
+                  <th>Ergebnis</th>
+                  <th>Punkte</th>
+                </tr>
+              </thead>
+              <tbody>
+                {races.map((r) => {
+                  const pivot = r.raceAthlete;
+                  return (
+                    <tr key={r.id}>
+                      <td>{formatDate(r.date)}</td>
+                      <td>{r.raceMode?.title ?? "-"}</td>
+                      <td className={pivot?.dnf ? "athlete-history__dnf" : ""}>
+                        {formatResult(pivot)}
+                      </td>
+                      <td>
+                        {pivot?.points != null ? pivot.points : "-"}
+                        {pivot?.laps !== 0 && pivot?.laps != null ? (
+                          <span className={`athlete-history__laps ${pivot.laps > 0 ? "athlete-history__laps--up" : "athlete-history__laps--down"}`}>
+                            {pivot.laps > 0 ? ` (+${pivot.laps}R)` : ` (${pivot.laps}R)`}
+                          </span>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==============================
+// Hauptseite
+// ==============================
 const Athletes = () => {
   const { token } = useContext(AuthContext);
 
@@ -21,6 +108,7 @@ const Athletes = () => {
     createAthlete,
     updateAthlete,
     deleteAthlete,
+    fetchAthleteRaceHistory,
     isLoading,
     error,
   } = useAthletes(token);
@@ -52,9 +140,7 @@ const Athletes = () => {
     const payload = {
       ...formData,
       raceNumber: formData.raceNumber ? Number(formData.raceNumber) : null,
-      // Verhindert den Foreign Key Constraint Error (0 vs null)
       clubId: formData.clubId === "" ? null : Number(formData.clubId),
-      // Da sie jetzt schon Numbers sind, reicht das direkte Array:
       raceClasses: formData.raceClasses,
     };
 
@@ -68,14 +154,7 @@ const Athletes = () => {
     if (result.success) {
       setShowForm(false);
       setEditingAthlete(null);
-      setFormData({
-        firstname: "",
-        lastname: "",
-        raceNumber: "",
-        gender: "",
-        clubId: "",
-        raceClasses: [],
-      });
+      setFormData({ firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] });
     }
   };
 
@@ -87,7 +166,6 @@ const Athletes = () => {
       raceNumber: athlete.raceNumber || "",
       gender: athlete.gender || "",
       clubId: athlete.clubId || "",
-      // HIER GEÄNDERT: String() entfernt, damit es Numbers bleiben
       raceClasses: athlete.raceClasses?.map((r) => r.id) || [],
     });
     setShowForm(true);
@@ -100,6 +178,8 @@ const Athletes = () => {
     if (result.success) setAthleteToDelete(null);
   };
 
+  const emptyForm = { firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] };
+
   return (
     <>
       <h1>Athleten</h1>
@@ -109,7 +189,6 @@ const Athletes = () => {
       ) : (
         <div className="card-container">
           {athletes.map((athlete) => {
-            // 1. LÖSCH-ZUSTAND
             if (athleteToDelete?.id === athlete.id) {
               return (
                 <DeleteCard
@@ -122,14 +201,9 @@ const Athletes = () => {
               );
             }
 
-            // 2. EDITIER-ZUSTAND: Ersetze die Karte direkt mit dem Formular
             if (editingAthlete?.id === athlete.id && showForm) {
               return (
-                <Card
-                  key={athlete.id}
-                  title="Athlet bearbeiten"
-                  extraClass="card-edit"
-                >
+                <Card key={athlete.id} title="Athlet bearbeiten" extraClass="card-edit">
                   <AthleteForm
                     formData={formData}
                     onChange={handleInputChange}
@@ -137,15 +211,7 @@ const Athletes = () => {
                     onCancel={() => {
                       setShowForm(false);
                       setEditingAthlete(null);
-                      // Formulardaten zurücksetzen
-                      setFormData({
-                        firstname: "",
-                        lastname: "",
-                        raceNumber: "",
-                        gender: "",
-                        clubId: "",
-                        raceClasses: [],
-                      });
+                      setFormData(emptyForm);
                     }}
                     clubs={clubs}
                     raceClasses={raceClasses}
@@ -155,47 +221,40 @@ const Athletes = () => {
               );
             }
 
-            // 3. NORMALER ZUSTAND
             return (
               <Card
                 key={athlete.id}
                 title={`${athlete.firstname} ${athlete.lastname}`}
-                subtitle={`Nr. ${athlete.raceNumber || "-"}`}
+                subtitle={`Nr. ${athlete.raceNumber || "-"}${athlete.club ? ` · ${athlete.club.name}` : ""}`}
                 onEdit={() => handleEdit(athlete)}
                 onDelete={() => handleDelete(athlete)}
-              />
+              >
+                <RaceHistoryPanel
+                  athleteId={athlete.id}
+                  fetchAthleteRaceHistory={fetchAthleteRaceHistory}
+                />
+              </Card>
             );
           })}
 
-          {/* Formular für einen GANZ NEUEN Athleten (am Ende der Liste) */}
           {showForm && !editingAthlete ? (
             <Card title="Neuer Athlet" extraClass="card-edit">
               <AthleteForm
                 formData={formData}
                 onChange={handleInputChange}
                 onSubmit={handleSubmit}
-                onCancel={() => {
-                  setShowForm(false);
-                }}
+                onCancel={() => setShowForm(false)}
                 clubs={clubs}
                 raceClasses={raceClasses}
                 error={error}
               />
             </Card>
           ) : (
-            // Zeige die "Hinzufügen"-Karte nur, wenn wir nicht gerade einen neuen erstellen
             !showForm && (
               <AddCard
                 onClick={() => {
                   setEditingAthlete(null);
-                  setFormData({
-                    firstname: "",
-                    lastname: "",
-                    raceNumber: "",
-                    gender: "",
-                    clubId: "",
-                    raceClasses: [],
-                  });
+                  setFormData(emptyForm);
                   setShowForm(true);
                 }}
               />

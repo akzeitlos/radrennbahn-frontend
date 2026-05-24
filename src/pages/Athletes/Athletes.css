@@ -9,3 +9,81 @@
     grid-template-columns: 1fr !important;
   }
 }
+/* ==============================
+   Rennhistorie
+============================== */
+.athlete-history {
+  margin-top: auto;
+  border-top: 1px solid var(--color-light-grey);
+  padding-top: 0.75rem;
+}
+
+.athlete-history__toggle {
+  background: none;
+  border: none;
+  color: var(--color-blue);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.athlete-history__toggle:hover {
+  opacity: 0.7;
+}
+
+.athlete-history__panel {
+  margin-top: 0.75rem;
+  animation: cardFadeIn 0.15s ease;
+}
+
+.athlete-history__empty {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+  font-style: italic;
+  margin: 0;
+}
+
+.athlete-history__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.athlete-history__table th {
+  text-align: left;
+  color: var(--color-mid-grey);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--color-light-grey);
+}
+
+.athlete-history__table td {
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid var(--color-light-grey);
+  color: var(--color-dark-grey);
+}
+
+.athlete-history__table tr:last-child td {
+  border-bottom: none;
+}
+
+.athlete-history__dnf {
+  color: var(--color-red);
+  font-weight: 600;
+}
+
+.athlete-history__laps {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.athlete-history__laps--up {
+  color: var(--color-dark-green);
+}
+
+.athlete-history__laps--down {
+  color: var(--color-red);
+}

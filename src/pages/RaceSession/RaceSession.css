@@ -1,0 +1,42 @@
+.race-session {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.race-session__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.race-session__title {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.race-session__meta {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+}
+
+.race-session__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-direction: row;
+}
+
+
+
+.race-session__not-found {
+  color: var(--color-white);
+  opacity: 0.7;
+}

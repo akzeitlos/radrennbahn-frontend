@@ -71,7 +71,7 @@ function ResetPassword() {
           onChange={(e) => setConfirm(e.target.value)}
           required
         />
-        <Button type="submit" style="primary">
+        <Button type="submit" style="primary" fullWidth="true">
           Reset Password
         </Button>
       </form>

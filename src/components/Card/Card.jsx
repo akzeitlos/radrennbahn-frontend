@@ -1,6 +1,8 @@
 import "./Card.css";
 import Delete from "@/assets/icons/delete.svg?react";
 import Edit from "@/assets/icons/edit.svg?react";
+import Play from "@/assets/icons/play.svg?react";
+import Eye from "@/assets/icons/eye.svg?react";
 
 const Card = ({
   title,
@@ -8,20 +10,29 @@ const Card = ({
   aspectRatio = "",
   onEdit,
   onDelete,
+  onPlay,
+  isCompleted = false,
   danger = false,
   extraClass = "",
 }) => {
   return (
-    <div
-      className={`card ${aspectRatio} ${
-        danger ? "card-danger" : ""
-      } ${extraClass}`}
-    >
+    <div className={`card ${aspectRatio} ${danger ? "card-danger" : ""} ${extraClass}`}>
       <div className="card-header">
         <h2>{title}</h2>
-
-        {!danger && (onEdit || onDelete) && (
+        {!danger && (onEdit || onDelete || onPlay) && (
           <div className="hover-buttons">
+            {onPlay && (
+              <button
+                className={`play-btn ${isCompleted ? "play-btn--completed" : ""}`}
+                onClick={onPlay}
+                title={isCompleted ? "Ergebnisse ansehen" : "Rennen starten"}
+              >
+                {isCompleted
+                  ? <Eye className="icon" />
+                  : <Play className="icon" />
+                }
+              </button>
+            )}
             {onEdit && (
               <button className="edit-btn" onClick={onEdit} title="Bearbeiten">
                 <Edit className="icon" />

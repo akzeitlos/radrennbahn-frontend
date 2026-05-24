@@ -82,7 +82,7 @@ function Login() {
         />
 
         {/* Submit login button */}
-        <Button type="submit" style="primary">
+        <Button type="submit" style="primary" fullWidth="true">
           Login
         </Button>
 

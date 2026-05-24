@@ -111,6 +111,18 @@ function useAthletes(token) {
     }
   };
 
+  // Rennhistorie eines Athleten laden
+  const fetchAthleteRaceHistory = async (id) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/athletes/${id}/race-history`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { success: true, races: response.data };
+    } catch (err) {
+      return { success: false, races: [] };
+    }
+  };
+
   return {
     athletes,
     isLoading,
@@ -118,6 +130,7 @@ function useAthletes(token) {
     createAthlete,
     updateAthlete,
     deleteAthlete,
+    fetchAthleteRaceHistory,
   };
 }
 

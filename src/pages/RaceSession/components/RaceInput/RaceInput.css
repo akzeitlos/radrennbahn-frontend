@@ -1,0 +1,189 @@
+.race-input {
+  min-height: unset !important;
+  flex-shrink: 0;
+}
+
+/* Tabs */
+.race-input__tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Sub-Tabs (Wertungsrunden) */
+.race-input__tabs--sub {
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-light-blue);
+}
+
+/* Panel */
+.race-input__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.race-input__entry-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Positions-Chips */
+.race-input__positions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.race-input__position-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--color-light-blue);
+  border-radius: var(--border-radius-small);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.race-input__pos-rank {
+  color: var(--color-mid-grey);
+  font-size: 0.75rem;
+}
+
+.race-input__pos-nr {
+  font-weight: 700;
+  color: var(--color-blue);
+}
+
+.race-input__pos-remove {
+  background: none;
+  border: none;
+  color: var(--color-mid-grey);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0.1rem;
+}
+
+.race-input__pos-remove:hover {
+  color: var(--color-red);
+}
+
+/* Lap actions */
+.race-input__lap-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* DNF list */
+.race-input__dnf-list {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.race-input__dnf-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--color-dark-grey);
+}
+
+.race-input__dnf-chip {
+  background: var(--color-red);
+  color: var(--color-white);
+  border-radius: var(--border-radius-small);
+  padding: 0.15rem 0.5rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Hint */
+.race-input__hint {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+  margin: 0;
+}
+
+/* Flash */
+.race-input__flash {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius-small);
+  font-weight: 600;
+  font-size: 0.875rem;
+  animation: flashIn 0.2s ease;
+}
+
+.race-input__flash--error {
+  background: #fde8e8;
+  color: var(--color-red);
+}
+
+.race-input__flash--success {
+  background: #edf7e1;
+  color: var(--color-dark-green);
+}
+
+@keyframes flashIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.race-input__dnf-remove {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 0 0 4px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.race-input__dnf-remove:hover {
+  opacity: 1;
+}
+
+.icon-up, .icon-down {
+  fill: var(--color-white);
+  width: .5rem;
+}
+
+.icon-up,.icon-up:hover {
+  transform: rotate(-90deg) !important;
+}
+
+.icon-down,.icon-down:hover {
+  transform: rotate(90deg) !important;
+}
+
+/* Finale-Zieleinlauf Block */
+.race-input__finale-finish {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-light-blue);
+}
+
+.race-input__hint--finish {
+  font-weight: 600;
+  color: var(--color-blue);
+}
+
+/* Edit-Aktionen */
+.race-input__edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}

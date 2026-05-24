@@ -53,7 +53,7 @@ function useRaces(token) {
           athletes: formData.athletes ?? [],
           danishScoringRounds: formData.danishScoringRounds ?? [],
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setRaces((prev) => [...prev, response.data]);
@@ -90,12 +90,10 @@ function useRaces(token) {
           athletes: formData.athletes,
           danishScoringRounds: formData.danishScoringRounds,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      setRaces((prev) =>
-        prev.map((r) => (r.id === id ? response.data : r))
-      );
+      setRaces((prev) => prev.map((r) => (r.id === id ? response.data : r)));
 
       return { success: true, race: response.data };
     } catch (err) {
@@ -127,6 +125,24 @@ function useRaces(token) {
     }
   };
 
+  const completeRace = async (id, isCompleted) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/races/${id}/complete`,
+        { isCompleted },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      setRaces((prev) =>
+        prev.map((r) =>
+          r.id === id ? { ...r, isCompleted: response.data.isCompleted } : r,
+        ),
+      );
+      return { success: true };
+    } catch (err) {
+      return { success: false };
+    }
+  };
+
   return {
     races,
     isLoading,
@@ -134,6 +150,7 @@ function useRaces(token) {
     createRace,
     updateRace,
     deleteRace,
+    completeRace,
   };
 }
 

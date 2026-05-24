@@ -14,11 +14,15 @@ const RaceForm = ({
   athletes,
   error,
 }) => {
-  const selectedMode = raceModes.find((m) => m.id === Number(formData.raceModeId));
+  const selectedMode = raceModes.find(
+    (m) => m.id === Number(formData.raceModeId),
+  );
   const modeType = selectedMode?.slug;
 
   const modeSelected = !!selectedMode;
-  const showPoints = modeSelected && (modeType === "points" || modeType === "tempo" || modeType === "danish");
+  const showPoints =
+    modeSelected &&
+    (modeType === "points" || modeType === "tempo" || modeType === "danish");
   const isDanish = modeType === "danish";
   const showAthletes = formData.raceClasses.length > 0;
 
@@ -26,7 +30,7 @@ const RaceForm = ({
   // Athleten nach Rennklassen filtern
   // ==============================
   const filteredAthletes = athletes.filter((a) =>
-    a.raceClasses?.some((rc) => formData.raceClasses.includes(rc.id))
+    a.raceClasses?.some((rc) => formData.raceClasses.includes(rc.id)),
   );
 
   // ==============================
@@ -34,7 +38,8 @@ const RaceForm = ({
   // ==============================
   const rounds = Number(formData.rounds);
   const interval = Number(formData.scoringInterval);
-  const danishRowCount = rounds > 0 && interval > 0 ? Math.floor(rounds / interval) : 0;
+  const danishRowCount =
+    rounds > 0 && interval > 0 ? Math.floor(rounds / interval) : 0;
 
   const getDanishValue = (rowIndex, colIndex) => {
     const round = formData.danishScoringRounds[rowIndex];
@@ -48,7 +53,10 @@ const RaceForm = ({
         roundNumber: i + 1,
         pointsDistribution: [],
       };
-      return { ...existing, pointsDistribution: [...(existing.pointsDistribution || [])] };
+      return {
+        ...existing,
+        pointsDistribution: [...(existing.pointsDistribution || [])],
+      };
     });
 
     const dist = [...(updated[rowIndex].pointsDistribution || [])];
@@ -63,12 +71,13 @@ const RaceForm = ({
 
   const maxPlaces = Math.max(
     4,
-    ...formData.danishScoringRounds.map((r) => r.pointsDistribution?.length || 0)
+    ...formData.danishScoringRounds.map(
+      (r) => r.pointsDistribution?.length || 0,
+    ),
   );
 
   return (
     <form className="form race-form" onSubmit={onSubmit}>
-
       {/* ==============================
           ABSCHNITT 1: ALLGEMEIN
       ============================== */}
@@ -213,11 +222,16 @@ const RaceForm = ({
             <div className="race-form__danish">
               <div
                 className="race-form__danish-grid"
-                style={{ gridTemplateColumns: `auto repeat(${danishRowCount}, 1fr)` }}
+                style={{
+                  gridTemplateColumns: `auto repeat(${danishRowCount}, 1fr)`,
+                }}
               >
                 <div className="race-form__danish-cell race-form__danish-cell--header" />
                 {Array.from({ length: danishRowCount }, (_, i) => (
-                  <div key={i} className="race-form__danish-cell race-form__danish-cell--header">
+                  <div
+                    key={i}
+                    className="race-form__danish-cell race-form__danish-cell--header"
+                  >
                     {i + 1}. Wertung
                   </div>
                 ))}
@@ -231,14 +245,19 @@ const RaceForm = ({
                       Platz {colIndex + 1}
                     </div>
                     {Array.from({ length: danishRowCount }, (_, rowIndex) => (
-                      <input
+                      <div
                         key={`cell-${rowIndex}-${colIndex}`}
                         className="race-form__danish-cell race-form__danish-cell--input"
-                        type="number"
-                        min="0"
-                        value={getDanishValue(rowIndex, colIndex)}
-                        onChange={(e) => setDanishValue(rowIndex, colIndex, e.target.value)}
-                      />
+                      >
+                        <Input
+                          name={`danish-${rowIndex}-${colIndex}`}
+                          type="number"
+                          value={getDanishValue(rowIndex, colIndex)}
+                          onChange={(e) =>
+                            setDanishValue(rowIndex, colIndex, e.target.value)
+                          }
+                        />
+                      </div>
                     ))}
                   </>
                 ))}
@@ -248,7 +267,8 @@ const RaceForm = ({
 
           {isDanish && danishRowCount === 0 && (
             <p className="race-form__hint">
-              Trage Runden und Wertungsintervall ein, um das Punktegrid zu sehen.
+              Trage Runden und Wertungsintervall ein, um das Punktegrid zu
+              sehen.
             </p>
           )}
         </div>
@@ -265,7 +285,10 @@ const RaceForm = ({
             name="raceClasses"
             value={formData.raceClasses}
             onChange={onChange}
-            options={raceClasses.map((rc) => ({ value: rc.id, label: rc.name }))}
+            options={raceClasses.map((rc) => ({
+              value: rc.id,
+              label: rc.name,
+            }))}
           />
 
           {showAthletes ? (
@@ -299,7 +322,6 @@ const RaceForm = ({
         </Button>
         {error && <p className="error-message">{error}</p>}
       </div>
-
     </form>
   );
 };

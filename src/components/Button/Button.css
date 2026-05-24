@@ -5,11 +5,23 @@
   border-radius: var(--border-radius-small);
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
-  width: 100%;
   transition:
     background-color 0.5s ease,
     transform 0.5s ease;
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+}
+
+.button-full {
+  width: 100%;
+  justify-content: center;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .primary-button {
@@ -19,6 +31,18 @@
 .primary-button:hover {
   background-color: var(--color-blue);
   color: var(--color-white);
+  fill: var(--color-white);
+}
+
+.primary-active-button {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+.primary-active-button:hover {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  fill: var(--color-white);
 }
 
 .secondary-button {
@@ -29,21 +53,65 @@
 .secondary-button:hover {
   background-color: var(--color-dark-grey);
   color: var(--color-white);
+  fill: var(--color-white);
 }
 
 .danger-button {
-  background-color: var(--color-light-red);
+  background-color: var(--color-red);
+  color: var(--color-white);
 }
 
 .danger-button:hover {
-  background-color: var(--color-blue);
+  background-color: var(--color-dark-red);
+  fill: var(--color-white);
 }
 
 .success-button {
   background-color: var(--color-light-green);
   color: var(--color-white);
+    fill: var(--color-white);
+
 }
 
 .success-button:hover {
   background-color: var(--color-dark-green);
+  fill: var(--color-white);
+}
+
+.button-state {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    transform 0.15s ease;
+}
+
+.button-state-error {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.button-square {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-small {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
 }
