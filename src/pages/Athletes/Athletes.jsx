@@ -1,10 +1,13 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 import Card from "@/components/Card/Card.jsx";
 import AddCard from "@/components/AddCard/AddCard.jsx";
 import DeleteCard from "@/components/DeleteCard/DeleteCard.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
 
 import AthleteForm from "@/components/Forms/AthleteForm.jsx";
+import AthleteFilterBar from "@/components/AthleteFilterBar/AthleteFilterBar.jsx";
+import AthleteTable from "@/components/AthleteTable/AthleteTable.jsx";
+
 import useAthletes from "@/hooks/useAthletes.jsx";
 import useClubs from "@/hooks/useClubs.jsx";
 import useRaceClasses from "@/hooks/useRaceClasses.jsx";
@@ -13,88 +16,35 @@ import { AuthContext } from "@/context/AuthContext.jsx";
 
 import "./Athletes.css";
 
-// ==============================
-// Rennhistorie-Klappelement
-// ==============================
-const RaceHistoryPanel = ({ athleteId, fetchAthleteRaceHistory }) => {
-  const [open, setOpen] = useState(false);
-  const [races, setRaces] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const toggle = async () => {
-    if (!open && races === null) {
-      setLoading(true);
-      const result = await fetchAthleteRaceHistory(athleteId);
-      setRaces(result.races);
-      setLoading(false);
+// ---- Filterfunktion ----
+const applyFilters = (athletes, filters) => {
+  return athletes.filter((a) => {
+    // Textsuche: Name oder Startnummer
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      const fullName = `${a.firstname} ${a.lastname}`.toLowerCase();
+      const raceNum = String(a.raceNumber ?? "");
+      if (!fullName.includes(q) && !raceNum.includes(q)) return false;
     }
-    setOpen((v) => !v);
-  };
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "-";
-    const [y, m, d] = dateStr.split("-");
-    return `${d}.${m}.${y}`;
-  };
+    // Geschlecht
+    if (filters.gender) {
+      const g = (a.gender ?? "").toLowerCase();
+      const isMale = g === "m" || g === "male" || g === "männlich";
+      const isFemale = g === "f" || g === "female" || g === "weiblich" || g === "w";
+      if (filters.gender === "m" && !isMale) return false;
+      if (filters.gender === "f" && !isFemale) return false;
+    }
 
-  const formatResult = (pivot) => {
-    if (!pivot) return "";
-    if (pivot.dnf) return "DNF";
-    if (pivot.eliminated) return "Ausgeschieden";
-    if (pivot.finalPosition) return `Platz ${pivot.finalPosition}`;
-    return "-";
-  };
+    // Rennklassen (mind. eine muss passen)
+    if (filters.raceClassIds.length > 0) {
+      const athleteClassIds = a.raceClasses?.map((rc) => rc.id) ?? [];
+      const hasMatch = filters.raceClassIds.some((id) => athleteClassIds.includes(id));
+      if (!hasMatch) return false;
+    }
 
-  return (
-    <div className="athlete-history">
-      <button className="athlete-history__toggle" onClick={toggle}>
-        {open ? "▲" : "▼"} Rennhistorie
-      </button>
-
-      {open && (
-        <div className="athlete-history__panel">
-          {loading ? (
-            <p className="athlete-history__empty">Lade …</p>
-          ) : !races || races.length === 0 ? (
-            <p className="athlete-history__empty">Noch keine Rennen eingetragen.</p>
-          ) : (
-            <table className="athlete-history__table">
-              <thead>
-                <tr>
-                  <th>Datum</th>
-                  <th>Modus</th>
-                  <th>Ergebnis</th>
-                  <th>Punkte</th>
-                </tr>
-              </thead>
-              <tbody>
-                {races.map((r) => {
-                  const pivot = r.raceAthlete;
-                  return (
-                    <tr key={r.id}>
-                      <td>{formatDate(r.date)}</td>
-                      <td>{r.raceMode?.title ?? "-"}</td>
-                      <td className={pivot?.dnf ? "athlete-history__dnf" : ""}>
-                        {formatResult(pivot)}
-                      </td>
-                      <td>
-                        {pivot?.points != null ? pivot.points : "-"}
-                        {pivot?.laps !== 0 && pivot?.laps != null ? (
-                          <span className={`athlete-history__laps ${pivot.laps > 0 ? "athlete-history__laps--up" : "athlete-history__laps--down"}`}>
-                            {pivot.laps > 0 ? ` (+${pivot.laps}R)` : ` (${pivot.laps}R)`}
-                          </span>
-                        ) : null}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-    </div>
-  );
+    return true;
+  });
 };
 
 // ==============================
@@ -120,6 +70,12 @@ const Athletes = () => {
   const [editingAthlete, setEditingAthlete] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
+  const [filters, setFilters] = useState({
+    search: "",
+    gender: "",
+    raceClassIds: [],
+  });
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -128,6 +84,9 @@ const Athletes = () => {
     clubId: "",
     raceClasses: [],
   });
+  const emptyForm = { firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] };
+
+  const filteredAthletes = useMemo(() => applyFilters(athletes, filters), [athletes, filters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -136,25 +95,19 @@ const Athletes = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const payload = {
       ...formData,
       raceNumber: formData.raceNumber ? Number(formData.raceNumber) : null,
       clubId: formData.clubId === "" ? null : Number(formData.clubId),
       raceClasses: formData.raceClasses,
     };
-
-    let result;
-    if (editingAthlete) {
-      result = await updateAthlete(editingAthlete.id, payload);
-    } else {
-      result = await createAthlete(payload);
-    }
-
+    const result = editingAthlete
+      ? await updateAthlete(editingAthlete.id, payload)
+      : await createAthlete(payload);
     if (result.success) {
       setShowForm(false);
       setEditingAthlete(null);
-      setFormData({ firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] });
+      setFormData(emptyForm);
     }
   };
 
@@ -178,88 +131,83 @@ const Athletes = () => {
     if (result.success) setAthleteToDelete(null);
   };
 
-  const emptyForm = { firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] };
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingAthlete(null);
+    setFormData(emptyForm);
+  };
 
   return (
     <>
-      <h1>Athleten</h1>
+      <div className="athletes-header">
+        <h1>Athleten</h1>
+        <button
+          className="athletes-header__add-btn"
+          onClick={() => {
+            setEditingAthlete(null);
+            setFormData(emptyForm);
+            setShowForm(true);
+          }}
+        >
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10 4v12M4 10h12" strokeLinecap="round" />
+          </svg>
+          Neuer Athlet
+        </button>
+      </div>
+
+      <AthleteFilterBar
+        filters={filters}
+        onChange={setFilters}
+        raceClasses={raceClasses}
+        totalCount={athletes.length}
+        filteredCount={filteredAthletes.length}
+      />
 
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <div className="card-container">
-          {athletes.map((athlete) => {
-            if (athleteToDelete?.id === athlete.id) {
-              return (
-                <DeleteCard
-                  key={athlete.id}
-                  item={athlete}
-                  title="Athlet"
-                  onConfirm={confirmDelete}
-                  onCancel={() => setAthleteToDelete(null)}
-                />
-              );
-            }
+        <AthleteTable
+          athletes={filteredAthletes}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          fetchAthleteRaceHistory={fetchAthleteRaceHistory}
+        />
+      )}
 
-            if (editingAthlete?.id === athlete.id && showForm) {
-              return (
-                <Card key={athlete.id} title="Athlet bearbeiten" extraClass="card-edit">
-                  <AthleteForm
-                    formData={formData}
-                    onChange={handleInputChange}
-                    onSubmit={handleSubmit}
-                    onCancel={() => {
-                      setShowForm(false);
-                      setEditingAthlete(null);
-                      setFormData(emptyForm);
-                    }}
-                    clubs={clubs}
-                    raceClasses={raceClasses}
-                    error={error}
-                  />
-                </Card>
-              );
-            }
+      {/* Delete Modal */}
+      {athleteToDelete && (
+        <div className="athletes-modal-overlay" onClick={() => setAthleteToDelete(null)}>
+          <div className="athletes-modal" onClick={(e) => e.stopPropagation()}>
+            <DeleteCard
+              item={athleteToDelete}
+              title="Athlet"
+              onConfirm={confirmDelete}
+              onCancel={() => setAthleteToDelete(null)}
+            />
+          </div>
+        </div>
+      )}
 
-            return (
-              <Card
-                key={athlete.id}
-                title={`${athlete.firstname} ${athlete.lastname}`}
-                subtitle={`Nr. ${athlete.raceNumber || "-"}${athlete.club ? ` · ${athlete.club.name}` : ""}`}
-                onEdit={() => handleEdit(athlete)}
-                onDelete={() => handleDelete(athlete)}
-              >
-                <RaceHistoryPanel
-                  athleteId={athlete.id}
-                  fetchAthleteRaceHistory={fetchAthleteRaceHistory}
-                />
-              </Card>
-            );
-          })}
-
-          {showForm && !editingAthlete ? (
-            <Card title="Neuer Athlet" extraClass="card-edit">
+      {/* Edit / Create Modal */}
+      {showForm && (
+        <div className="athletes-modal-overlay" onClick={closeForm}>
+          <div className="athletes-modal athletes-modal--form" onClick={(e) => e.stopPropagation()}>
+            <Card
+              title={editingAthlete ? "Athlet bearbeiten" : "Neuer Athlet"}
+              extraClass="card-edit"
+            >
               <AthleteForm
                 formData={formData}
                 onChange={handleInputChange}
                 onSubmit={handleSubmit}
-                onCancel={() => setShowForm(false)}
+                onCancel={closeForm}
                 clubs={clubs}
                 raceClasses={raceClasses}
                 error={error}
               />
             </Card>
-          ) : (
-            !showForm && (
-              <AddCard
-                onClick={() => {
-                  setEditingAthlete(null);
-                  setFormData(emptyForm);
-                  setShowForm(true);
-                }}
-              />
-            )
-          )}
+          </div>
         </div>
       )}
     </>

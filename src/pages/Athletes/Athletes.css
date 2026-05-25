@@ -1,14 +1,17 @@
+/* ==============================
+   Athleten-Formular
+============================== */
 .athlete-form {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
   gap: 1rem !important;
 }
-
 @media (max-width: 768px) {
   .form {
     grid-template-columns: 1fr !important;
   }
 }
+
 /* ==============================
    Rennhistorie
 ============================== */
@@ -17,7 +20,6 @@
   border-top: 1px solid var(--color-light-grey);
   padding-top: 0.75rem;
 }
-
 .athlete-history__toggle {
   background: none;
   border: none;
@@ -28,29 +30,24 @@
   padding: 0;
   transition: opacity 0.15s;
 }
-
 .athlete-history__toggle:hover {
   opacity: 0.7;
 }
-
 .athlete-history__panel {
   margin-top: 0.75rem;
   animation: cardFadeIn 0.15s ease;
 }
-
 .athlete-history__empty {
   font-size: 0.8rem;
   color: var(--color-mid-grey);
   font-style: italic;
   margin: 0;
 }
-
 .athlete-history__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.82rem;
 }
-
 .athlete-history__table th {
   text-align: left;
   color: var(--color-mid-grey);
@@ -59,31 +56,93 @@
   padding: 0.25rem 0.4rem;
   border-bottom: 1px solid var(--color-light-grey);
 }
-
 .athlete-history__table td {
   padding: 0.3rem 0.4rem;
   border-bottom: 1px solid var(--color-light-grey);
   color: var(--color-dark-grey);
 }
-
 .athlete-history__table tr:last-child td {
   border-bottom: none;
 }
-
 .athlete-history__dnf {
   color: var(--color-red);
   font-weight: 600;
 }
-
 .athlete-history__laps {
   font-size: 0.72rem;
   font-weight: 600;
 }
-
 .athlete-history__laps--up {
   color: var(--color-dark-green);
 }
-
 .athlete-history__laps--down {
   color: var(--color-red);
+}
+
+/* ==============================
+   Seiten-Header + Add-Button
+============================== */
+.athletes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.athletes-header h1 {
+  margin: 0;
+}
+.athletes-header__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: var(--color-blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.athletes-header__add-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.athletes-header__add-btn:hover {
+  opacity: 0.85;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ==============================
+   Modal Overlay
+============================== */
+.athletes-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: overlay-in 0.15s ease;
+}
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.athletes-modal {
+  animation: modal-in 0.18s ease;
+  max-width: 480px;
+  width: 100%;
+}
+.athletes-modal--form {
+  max-width: 520px;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }

@@ -1,0 +1,211 @@
+.athlete-table-wrap {
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+.athlete-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Header */
+.athlete-table__th {
+  background: var(--color-surface-alt, #f8fafc);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--color-muted, #9ca3af);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  white-space: nowrap;
+}
+.athlete-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s, background .15s;
+}
+.athlete-table__th--sortable:hover {
+  color: var(--color-text, #374151);
+  background: var(--color-surface, #fff);
+}
+.athlete-table__th--active {
+  color: var(--color-primary, #3b82f6);
+}
+.athlete-table__th--actions {
+  text-align: right;
+}
+.sort-icon {
+  font-size: 10px;
+  opacity: .6;
+}
+
+/* Rows */
+.athlete-table__row {
+  border-bottom: 1px solid var(--color-border-light, #f3f4f6);
+  transition: background .1s;
+}
+.athlete-table__row:hover {
+  background: var(--color-hover, #f9fafb);
+}
+.athlete-table__row--expanded {
+  background: var(--color-hover, #f9fafb);
+}
+.athlete-table__row:last-child {
+  border-bottom: none;
+}
+
+.athlete-table__td {
+  padding: 13px 16px;
+  vertical-align: middle;
+  color: var(--color-text, #374151);
+}
+.athlete-table__dash {
+  color: var(--color-muted, #d1d5db);
+}
+
+/* Name column */
+.athlete-table__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.athlete-table__fullname {
+  font-weight: 500;
+  color: var(--color-text, #111827);
+}
+.athlete-table__expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  color: var(--color-muted, #9ca3af);
+  transition: color .15s;
+  line-height: 1;
+}
+.athlete-table__expand-btn:hover { color: var(--color-primary, #3b82f6); }
+.expand-arrow {
+  display: inline-block;
+  font-size: 9px;
+  transition: transform .2s;
+}
+.expand-arrow--open {
+  transform: rotate(90deg);
+}
+
+/* Race number */
+.race-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 3px 8px;
+  background: var(--color-surface-alt, #f1f5f9);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text, #374151);
+  border: 1px solid var(--color-border, #e5e7eb);
+}
+
+/* Gender badge */
+.gender-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.gender-badge svg {
+  width: 13px;
+  height: 13px;
+}
+.gender-badge--m {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+.gender-badge--f {
+  background: #fdf2f8;
+  color: #be185d;
+  border: 1px solid #fbcfe8;
+}
+
+/* Club */
+.athlete-table__club {
+  color: var(--color-text-secondary, #6b7280);
+}
+
+/* Race class badges */
+.race-class-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.race-class-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--color-primary-light, #eff6ff);
+  color: var(--color-primary, #2563eb);
+  border: 1px solid var(--color-primary-border, #bfdbfe);
+}
+
+/* Action buttons */
+.athlete-table__actions {
+  text-align: right;
+}
+.athlete-table__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--color-muted, #9ca3af);
+}
+.athlete-table__action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.athlete-table__action-btn--edit:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+.athlete-table__action-btn--delete:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+/* History row */
+.athlete-table__history-row {
+  background: var(--color-surface-alt, #f8fafc);
+}
+.athlete-table__history-cell {
+  padding: 0 16px 16px 48px;
+}
+
+/* Empty state */
+.athlete-table__empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-muted, #9ca3af);
+  font-size: 15px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+}
