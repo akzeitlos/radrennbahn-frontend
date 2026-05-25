@@ -1,149 +1,162 @@
+/* ── Wrapper ─────────────────────────────────────────────── */
 .athlete-table-wrap {
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 12px;
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--box-shadow);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
 }
 
+.athlete-table-scroll {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Tabelle ─────────────────────────────────────────────── */
 .athlete-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 0.9rem;
+  background: var(--color-white);
 }
 
-/* Header */
+.athlete-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
 .athlete-table__th {
-  background: var(--color-surface-alt, #f8fafc);
-  padding: 12px 16px;
+  background: var(--color-light-blue);
+  padding: 0.75rem 1rem;
   text-align: left;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--color-muted, #9ca3af);
-  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  letter-spacing: 0.06em;
+  color: var(--color-blue);
+  border-bottom: 2px solid var(--color-blue);
   white-space: nowrap;
 }
 .athlete-table__th--sortable {
   cursor: pointer;
   user-select: none;
-  transition: color .15s, background .15s;
+  transition: background 0.15s;
 }
 .athlete-table__th--sortable:hover {
-  color: var(--color-text, #374151);
-  background: var(--color-surface, #fff);
+  background: var(--color-blue);
+  color: var(--color-white);
 }
 .athlete-table__th--active {
-  color: var(--color-primary, #3b82f6);
+  background: var(--color-blue);
+  color: var(--color-white);
 }
 .athlete-table__th--actions {
   text-align: right;
 }
 .sort-icon {
-  font-size: 10px;
-  opacity: .6;
+  font-size: 0.65rem;
+  opacity: 0.7;
+  margin-left: 3px;
 }
 
-/* Rows */
+/* ── Rows ────────────────────────────────────────────────── */
 .athlete-table__row {
-  border-bottom: 1px solid var(--color-border-light, #f3f4f6);
-  transition: background .1s;
+  border-bottom: 1px solid var(--color-light-grey);
+  transition: background 0.1s;
 }
 .athlete-table__row:hover {
-  background: var(--color-hover, #f9fafb);
+  background: var(--color-light-grey);
 }
 .athlete-table__row--expanded {
-  background: var(--color-hover, #f9fafb);
+  background: var(--color-light-grey);
 }
 .athlete-table__row:last-child {
   border-bottom: none;
 }
 
 .athlete-table__td {
-  padding: 13px 16px;
+  padding: 0.75rem 1rem;
   vertical-align: middle;
-  color: var(--color-text, #374151);
+  color: var(--color-dark-grey);
 }
 .athlete-table__dash {
-  color: var(--color-muted, #d1d5db);
+  color: var(--color-mid-grey);
 }
 
-/* Name column */
+/* ── Name-Spalte ─────────────────────────────────────────── */
 .athlete-table__name {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .athlete-table__fullname {
-  font-weight: 500;
-  color: var(--color-text, #111827);
+  font-weight: 600;
+  color: var(--color-blue);
 }
 .athlete-table__expand-btn {
   background: none;
   border: none;
   cursor: pointer;
   padding: 2px 4px;
-  color: var(--color-muted, #9ca3af);
-  transition: color .15s;
   line-height: 1;
+  flex-shrink: 0;
 }
-.athlete-table__expand-btn:hover { color: var(--color-primary, #3b82f6); }
+.athlete-table__expand-btn svg {
+  fill: var(--color-mid-grey);
+  height: 0.75rem;
+}
 .expand-arrow {
-  display: inline-block;
-  font-size: 9px;
-  transition: transform .2s;
-}
-.expand-arrow--open {
   transform: rotate(90deg);
 }
+.expand-arrow--open {
+  transform: rotate(270deg);
+}
 
-/* Race number */
+/* ── Race number ─────────────────────────────────────────── */
 .race-number {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  padding: 3px 8px;
-  background: var(--color-surface-alt, #f1f5f9);
-  border-radius: 6px;
+  min-width: 2rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--color-light-grey);
+  border-radius: var(--border-radius-small);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
-  color: var(--color-text, #374151);
-  border: 1px solid var(--color-border, #e5e7eb);
+  color: var(--color-dark-grey);
 }
 
-/* Gender badge */
+/* ── Gender badge ────────────────────────────────────────── */
 .gender-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
+  padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
-.gender-badge svg {
+.gender-badge .icon {
   width: 13px;
   height: 13px;
 }
 .gender-badge--m {
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
+  background: var(--color-light-blue);
+  color: var(--color-blue);
 }
 .gender-badge--f {
-  background: #fdf2f8;
-  color: #be185d;
-  border: 1px solid #fbcfe8;
+  background: #fce7f3;
+  color: var(--color-dark-red);
 }
 
-/* Club */
+/* ── Club ────────────────────────────────────────────────── */
 .athlete-table__club {
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-dark-grey);
 }
 
-/* Race class badges */
+/* ── Race class badges ───────────────────────────────────── */
 .race-class-badges {
   display: flex;
   flex-wrap: wrap;
@@ -151,16 +164,15 @@
 }
 .race-class-badge {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  background: var(--color-primary-light, #eff6ff);
-  color: var(--color-primary, #2563eb);
-  border: 1px solid var(--color-primary-border, #bfdbfe);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-light-blue);
+  color: var(--color-blue);
 }
 
-/* Action buttons */
+/* ── Action buttons ──────────────────────────────────────── */
 .athlete-table__actions {
   text-align: right;
 }
@@ -168,44 +180,172 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 7px;
-  border: 1px solid transparent;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--border-radius-small);
+  border: none;
   background: transparent;
   cursor: pointer;
-  transition: all .15s;
-  color: var(--color-muted, #9ca3af);
+  transition: all 0.15s;
 }
-.athlete-table__action-btn svg {
-  width: 16px;
-  height: 16px;
+.athlete-table__action-btn .icon {
+  width: 1rem;
+  height: 1rem;
+}
+.athlete-table__action-btn--edit .icon {
+  fill: var(--color-mid-grey);
 }
 .athlete-table__action-btn--edit:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #2563eb;
+  background: var(--color-light-blue);
+}
+.athlete-table__action-btn--edit:hover .icon {
+  fill: var(--color-blue);
+}
+.athlete-table__action-btn--delete .icon {
+  fill: var(--color-mid-grey);
 }
 .athlete-table__action-btn--delete:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #dc2626;
+  background: #fde8e8;
+}
+.athlete-table__action-btn--delete:hover .icon {
+  fill: var(--color-red);
 }
 
-/* History row */
+/* ── History row ─────────────────────────────────────────── */
 .athlete-table__history-row {
-  background: var(--color-surface-alt, #f8fafc);
+  background: var(--color-light-grey);
 }
 .athlete-table__history-cell {
-  padding: 0 16px 16px 48px;
+  padding: 0.5rem 1rem 1rem 3rem;
 }
 
-/* Empty state */
+/* ── Empty state ─────────────────────────────────────────── */
 .athlete-table__empty {
   text-align: center;
-  padding: 48px 24px;
-  color: var(--color-muted, #9ca3af);
-  font-size: 15px;
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 12px;
+  padding: 3rem 1.5rem;
+  color: var(--color-mid-grey);
+  font-size: 0.95rem;
+  background: var(--color-white);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--box-shadow);
+  font-style: italic;
+}
+
+/* ── Visibility-Helfer (base) ────────────────────────────── */
+.athlete-table__mobile-meta {
+  display: none;
+}
+.athlete-table__actions-inline {
+  display: none;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── > 980px: horizontales Scrollen auf engen Viewports ──── */
+@media (min-width: 981px) and (max-width: 1200px) {
+  .athlete-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .athlete-table {
+    min-width: 640px;
+  }
+}
+
+/* ── ≤ 980px: Karten-Layout ──────────────────────────────── */
+@media (max-width: 980px) {
+  .athlete-table-wrap {
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+  .athlete-table-scroll {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .athlete-table,
+  .athlete-table thead,
+  .athlete-table tbody,
+  .athlete-table thead tr,
+  .athlete-table tbody tr,
+  .athlete-table th,
+  .athlete-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .athlete-table {
+        background: transparent !important;
+  }
+
+  .athlete-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .athlete-table__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background: var(--color-white);
+    border: 1px solid var(--color-light-grey);
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 0.625rem;
+    padding: 0.75rem;
+  }
+  .athlete-table__row:last-child {
+    border-bottom: 1px solid var(--color-light-grey);
+    margin-bottom: 0;
+  }
+  .athlete-table__row--expanded {
+    border-color: var(--color-blue);
+  }
+
+  .athlete-table__td {
+    padding: 0;
+    border: none;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .athlete-table__td.athlete-table__name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .athlete-table__desktop-only {
+    display: none !important;
+  }
+
+  .athlete-table__desktop-cell {
+    display: none;
+  }
+  .athlete-table__mobile-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+  .athlete-table__mobile-club {
+    font-size: 0.78rem;
+    color: var(--color-mid-grey);
+  }
+
+  .athlete-table__actions-inline {
+    display: flex;
+    gap: 4px;
+  }
+
+  .athlete-table__history-row {
+    display: block;
+    background: transparent;
+  }
+  .athlete-table__history-cell {
+    display: block;
+    padding: 0 0 0.75rem 0;
+  }
 }

@@ -32,24 +32,22 @@
   gap: 0.35rem;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid var(--color-dark-grey) !important;
-  background: transparent;
-  color: var(--color-dark-grey);
-  font-family: "Open Sans";
+  background: var(--color-light-blue);
+  color: var(--color-blue);
   cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
 }
 
 .cs-chip:hover {
-  background: var(--color-light-blue);
-  border-color: var(--color-light-blue) !important;
+  background: var(--color-blue);
+  color: var(--color-white);
 }
 
 /* Aktiver Chip — wie aktive Option im Dropdown */
 .cs-chip--active {
-  background: var(--color-light-blue);
-  color: var(--color-blue);
+  background: var(--color-blue);
+  color: var(--color-white);
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
   border-color: var(--color-light-blue) !important;
@@ -61,5 +59,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-blue);
+  color: var(--color-white);
 }

@@ -1,33 +1,30 @@
 import { useState, useContext, useMemo } from "react";
+import Modal from "@/components/Modal/Modal.jsx";
 import Card from "@/components/Card/Card.jsx";
-import AddCard from "@/components/AddCard/AddCard.jsx";
-import DeleteCard from "@/components/DeleteCard/DeleteCard.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
 
 import AthleteForm from "@/components/Forms/AthleteForm.jsx";
-import AthleteFilterBar from "@/components/AthleteFilterBar/AthleteFilterBar.jsx";
-import AthleteTable from "@/components/AthleteTable/AthleteTable.jsx";
+import AthletesFilerBar from "@/components/AthletesFilterBar/AthletesFilterBar.jsx";
+import AthletesTable from "@/components/AthletesTable/AthletesTable.jsx";
 
 import useAthletes from "@/hooks/useAthletes.jsx";
 import useClubs from "@/hooks/useClubs.jsx";
 import useRaceClasses from "@/hooks/useRaceClasses.jsx";
 
 import { AuthContext } from "@/context/AuthContext.jsx";
+import Add from "@/assets/icons/add.svg?react";
 
 import "./Athletes.css";
 
 // ---- Filterfunktion ----
 const applyFilters = (athletes, filters) => {
   return athletes.filter((a) => {
-    // Textsuche: Name oder Startnummer
     if (filters.search) {
       const q = filters.search.toLowerCase();
       const fullName = `${a.firstname} ${a.lastname}`.toLowerCase();
       const raceNum = String(a.raceNumber ?? "");
       if (!fullName.includes(q) && !raceNum.includes(q)) return false;
     }
-
-    // Geschlecht
     if (filters.gender) {
       const g = (a.gender ?? "").toLowerCase();
       const isMale = g === "m" || g === "male" || g === "männlich";
@@ -35,21 +32,15 @@ const applyFilters = (athletes, filters) => {
       if (filters.gender === "m" && !isMale) return false;
       if (filters.gender === "f" && !isFemale) return false;
     }
-
-    // Rennklassen (mind. eine muss passen)
     if (filters.raceClassIds.length > 0) {
       const athleteClassIds = a.raceClasses?.map((rc) => rc.id) ?? [];
       const hasMatch = filters.raceClassIds.some((id) => athleteClassIds.includes(id));
       if (!hasMatch) return false;
     }
-
     return true;
   });
 };
 
-// ==============================
-// Hauptseite
-// ==============================
 const Athletes = () => {
   const { token } = useContext(AuthContext);
 
@@ -70,21 +61,10 @@ const Athletes = () => {
   const [editingAthlete, setEditingAthlete] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const [filters, setFilters] = useState({
-    search: "",
-    gender: "",
-    raceClassIds: [],
-  });
+  const [filters, setFilters] = useState({ search: "", gender: "", raceClassIds: [] });
 
-  const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
-    raceNumber: "",
-    gender: "",
-    clubId: "",
-    raceClasses: [],
-  });
   const emptyForm = { firstname: "", lastname: "", raceNumber: "", gender: "", clubId: "", raceClasses: [] };
+  const [formData, setFormData] = useState(emptyForm);
 
   const filteredAthletes = useMemo(() => applyFilters(athletes, filters), [athletes, filters]);
 
@@ -124,8 +104,6 @@ const Athletes = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (athlete) => setAthleteToDelete(athlete);
-
   const confirmDelete = async (id) => {
     const result = await deleteAthlete(id);
     if (result.success) setAthleteToDelete(null);
@@ -149,14 +127,12 @@ const Athletes = () => {
             setShowForm(true);
           }}
         >
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M10 4v12M4 10h12" strokeLinecap="round" />
-          </svg>
+          <Add className="icon" />
           Neuer Athlet
         </button>
       </div>
 
-      <AthleteFilterBar
+      <AthletesFilerBar
         filters={filters}
         onChange={setFilters}
         raceClasses={raceClasses}
@@ -167,36 +143,32 @@ const Athletes = () => {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <AthleteTable
+        <AthletesTable
           athletes={filteredAthletes}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={(athlete) => setAthleteToDelete(athlete)}
           fetchAthleteRaceHistory={fetchAthleteRaceHistory}
         />
       )}
 
-      {/* Delete Modal */}
+      {/* Löschen-Bestätigung */}
       {athleteToDelete && (
-        <div className="athletes-modal-overlay" onClick={() => setAthleteToDelete(null)}>
-          <div className="athletes-modal" onClick={(e) => e.stopPropagation()}>
-            <DeleteCard
-              item={athleteToDelete}
-              title="Athlet"
-              onConfirm={confirmDelete}
-              onCancel={() => setAthleteToDelete(null)}
-            />
-          </div>
-        </div>
+        <Modal
+          title="Athlet löschen"
+          message={`Möchtest du den Athleten ${athleteToDelete.firstname} ${athleteToDelete.lastname} wirklich löschen?`}
+          confirmLabel="Löschen"
+          cancelLabel="Abbrechen"
+          danger
+          onConfirm={() => confirmDelete(athleteToDelete.id)}
+          onCancel={() => setAthleteToDelete(null)}
+        />
       )}
 
-      {/* Edit / Create Modal */}
+      {/* Formular-Modal */}
       {showForm && (
         <div className="athletes-modal-overlay" onClick={closeForm}>
-          <div className="athletes-modal athletes-modal--form" onClick={(e) => e.stopPropagation()}>
-            <Card
-              title={editingAthlete ? "Athlet bearbeiten" : "Neuer Athlet"}
-              extraClass="card-edit"
-            >
+          <div className="athletes-modal" onClick={(e) => e.stopPropagation()}>
+            <Card title={editingAthlete ? "Athlet bearbeiten" : "Neuer Athlet"}>
               <AthleteForm
                 formData={formData}
                 onChange={handleInputChange}

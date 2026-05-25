@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Chevron from "@/assets/icons/chevron.svg?react";
 import "./Select.css";
 
-function Select({ label, name, value, onChange, options = [] }) {
+function Select({ label, name, value, onChange, options = [], colSpan }) {
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
@@ -33,9 +33,13 @@ function Select({ label, name, value, onChange, options = [] }) {
   const containerClasses = `select-field ${open ? "is-open" : ""} ${hasValue ? "has-value" : ""}`;
 
   return (
-    <div className={containerClasses} ref={selectRef}>
+    <div
+      className={containerClasses}
+      ref={selectRef}
+      style={colSpan === 2 ? { gridColumn: "span 2" } : undefined}
+    >
+      {" "}
       {label && <label>{label}</label>}
-
       <div className="select-box" onClick={() => setOpen(!open)}>
         {selectedOption ? (
           <span>{selectedOption.label}</span>
@@ -61,7 +65,6 @@ function Select({ label, name, value, onChange, options = [] }) {
           )}
         </div>
       </div>
-
       {open && (
         <div className="select-dropdown">
           {options.map((opt) => (

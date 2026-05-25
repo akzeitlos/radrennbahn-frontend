@@ -77,6 +77,7 @@ const AthleteForm = ({
           value: c.id,
           label: c.name,
         }))}
+        colSpan={2}
       />
 
       {/* ========================= */}
@@ -91,12 +92,13 @@ const AthleteForm = ({
           value: rc.id,
           label: rc.name,
         }))}
+        colSpan={2}
       />
 
-        <Button type="submit" style="primary">
+        <Button type="submit" style="primary" fullWidth="true">
           Speichern
         </Button>
-        <Button type="button" style="secondary" onClick={onCancel}>
+        <Button type="button" style="secondary" onClick={onCancel} fullWidth="true">
           Abbrechen
         </Button>
 

@@ -29,14 +29,14 @@ const RaceHistoryPanel = ({ athleteId, fetchAthleteRaceHistory, autoLoad = false
     return "-";
   };
 
-  if (loading) return <p className="race-history__empty">Lade …</p>;
+  if (loading) return <p className="athlete-history__empty">Lade …</p>;
 
   if (!races || races.length === 0) {
-    return <p className="race-history__empty">Noch keine Rennen eingetragen.</p>;
+    return <p className="athlete-history__empty">Noch keine Rennen eingetragen.</p>;
   }
 
   return (
-    <table className="race-history__table">
+    <table className="athlete-history__table">
       <thead>
         <tr>
           <th>Datum</th>
@@ -52,11 +52,11 @@ const RaceHistoryPanel = ({ athleteId, fetchAthleteRaceHistory, autoLoad = false
             <tr key={r.id}>
               <td>{formatDate(r.date)}</td>
               <td>{r.raceMode?.title ?? "-"}</td>
-              <td className={pivot?.dnf ? "race-history__dnf" : ""}>{formatResult(pivot)}</td>
+              <td className={pivot?.dnf ? "athlete-history__dnf" : ""}>{formatResult(pivot)}</td>
               <td>
                 {pivot?.points != null ? pivot.points : "-"}
                 {pivot?.laps !== 0 && pivot?.laps != null ? (
-                  <span className={`race-history__laps ${pivot.laps > 0 ? "race-history__laps--up" : "race-history__laps--down"}`}>
+                  <span className={`athlete-history__laps ${pivot.laps > 0 ? "athlete-history__laps--up" : "athlete-history__laps--down"}`}>
                     {pivot.laps > 0 ? ` (+${pivot.laps}R)` : ` (${pivot.laps}R)`}
                   </span>
                 ) : null}

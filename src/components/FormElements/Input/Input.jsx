@@ -1,10 +1,9 @@
 import "./Input.css";
 
-function Input({ label, name, type = "text", required = false, value, onChange, placeholder }) {
+function Input({ label, name, type = "text", required = false, value, onChange, placeholder, colSpan }) {
   const isFilled = type === "date" || (value && value.toString().length > 0);
-
   return (
-    <div className="input-field">
+    <div className="input-field" style={colSpan === 2 ? { gridColumn: "span 2" } : undefined}>
       <input
         type={type}
         name={name}
@@ -18,5 +17,4 @@ function Input({ label, name, type = "text", required = false, value, onChange, 
     </div>
   );
 }
-
 export default Input;

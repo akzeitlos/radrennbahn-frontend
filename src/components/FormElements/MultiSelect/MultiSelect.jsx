@@ -2,7 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import Chevron from "@/assets/icons/chevron.svg?react";
 import "./MultiSelect.css";
 
-function MultiSelect({ label, name, value = [], onChange, options = [] }) {
+function MultiSelect({
+  label,
+  name,
+  value = [],
+  onChange,
+  options = [],
+  colSpan,
+}) {
   const [open, setOpen] = useState(false);
   const multiRef = useRef(null);
 
@@ -56,9 +63,13 @@ function MultiSelect({ label, name, value = [], onChange, options = [] }) {
   `;
 
   return (
-    <div className={containerClasses} ref={multiRef}>
+    <div
+      className={containerClasses}
+      ref={multiRef}
+      style={colSpan === 2 ? { gridColumn: "span 2" } : undefined}
+    >
+      {" "}
       {label && <label>{label}</label>}
-
       <div className="multi-box" onClick={() => setOpen(!open)}>
         {value.length === 0 && open && (
           <span className="placeholder">Bitte wählen</span>
@@ -91,15 +102,12 @@ function MultiSelect({ label, name, value = [], onChange, options = [] }) {
           <Chevron className="chevron-icon" />
         </div>
       </div>
-
       {open && (
         <div className="dropdown">
           {options.map((opt) => (
             <div
               key={opt.value}
-              className={`option ${
-                value.includes(opt.value) ? "active" : ""
-              }`}
+              className={`option ${value.includes(opt.value) ? "active" : ""}`}
               onClick={() => toggleOption(opt.value)}
             >
               {opt.label}

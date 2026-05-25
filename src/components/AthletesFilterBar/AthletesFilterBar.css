@@ -1,0 +1,155 @@
+.filter-bar {
+  background: var(--color-white);
+  border-radius: var(--border-radius-medium);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  box-shadow: var(--box-shadow);
+}
+
+.filter-bar__top {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-bar__search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+}
+
+.filter-bar__clear-input {
+  position: absolute;
+  right: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--color-mid-grey);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.filter-bar__clear-input:hover {
+  color: var(--color-dark-grey);
+}
+
+.filter-bar__search-wrap input {
+  padding: 0.7rem !important;
+  font-size: 1rem !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-bar__gender-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.filter-bar__classes {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.filter-bar__classes-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-mid-grey);
+  white-space: nowrap;
+}
+
+.filter-bar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--color-light-grey);
+}
+
+.filter-bar__count {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+}
+
+/* Tablet portrait ≤ 768px */
+@media (max-width: 768px) {
+  .filter-bar {
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .filter-bar__search-wrap {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .filter-bar__gender-group {
+    flex: 1 1 auto;
+  }
+}
+
+/* Mobile ≤ 480px */
+@media (max-width: 480px) {
+  .filter-bar {
+    padding: 1rem;
+    gap: 0.625rem;
+  }
+
+  .filter-bar__top {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+
+  .filter-bar__gender-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .filter-bar__search-wrap input {
+    font-size: 0.9rem !important;
+  }
+
+  .filter-bar__classes-label {
+    font-size: 0.65rem;
+  }
+
+  .cs-chip {
+    font-size: 0.7rem;
+  }
+
+  .filter-bar__count {
+    font-size: 0.75rem;
+  }
+}
+
+/* Hover-States */
+.secondary-male:hover {
+  background: var(--color-light-blue);
+  color: var(--color-blue);
+}
+.secondary-male:hover .icon {
+  fill: var(--color-blue);
+}
+.secondary-female:hover {
+  background: var(--color-light-red);
+  color: var(--color-dark-red);
+}
+.secondary-female:hover .icon {
+  fill: var(--color-dark-red);
+}

@@ -12,6 +12,7 @@ function Button({
   fullWidth = false,
   square = false,
   small = false,
+  extraClassName = "",
 }) {
   const classes = (stateStyle) => [
     "button",
@@ -19,6 +20,7 @@ function Button({
     fullWidth ? "button-full" : "",
     square ? "button-square" : "",
     small ? "button-small" : "",
+    extraClassName,
   ].filter(Boolean).join(" ");
 
   if (saveState !== null) {

@@ -1,31 +1,45 @@
-.race-history__empty {
-  color: var(--color-muted, #9ca3af);
-  font-size: 13px;
-  padding: 8px 0;
+/* RaceHistoryPanel nutzt die athlete-history__* Klassen aus Athletes.css */
+/* Hier nur die autoLoad-Variante (kein Toggle-Button nötig) */
+
+.athlete-history__empty {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+  font-style: italic;
   margin: 0;
 }
 
-.race-history__table {
+.athlete-history__table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.82rem;
 }
-.race-history__table th {
+.athlete-history__table th {
   text-align: left;
-  font-size: 11px;
+  color: var(--color-mid-grey);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--color-light-grey);
+}
+.athlete-history__table td {
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid var(--color-light-grey);
+  color: var(--color-dark-grey);
+}
+.athlete-history__table tr:last-child td {
+  border-bottom: none;
+}
+.athlete-history__dnf {
+  color: var(--color-red);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--color-muted, #9ca3af);
-  padding: 6px 12px 6px 0;
-  border-bottom: 1px solid var(--color-border, #e5e7eb);
 }
-.race-history__table td {
-  padding: 7px 12px 7px 0;
-  color: var(--color-text-secondary, #6b7280);
-  border-bottom: 1px solid var(--color-border-light, #f3f4f6);
+.athlete-history__laps {
+  font-size: 0.72rem;
+  font-weight: 600;
 }
-.race-history__table tr:last-child td { border-bottom: none; }
-.race-history__dnf { color: #dc2626; font-weight: 600; }
-.race-history__laps--up { color: #16a34a; font-size: 12px; }
-.race-history__laps--down { color: #dc2626; font-size: 12px; }
+.athlete-history__laps--up {
+  color: var(--color-dark-green);
+}
+.athlete-history__laps--down {
+  color: var(--color-red);
+}

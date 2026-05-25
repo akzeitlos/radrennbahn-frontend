@@ -69,14 +69,30 @@
 .success-button {
   background-color: var(--color-light-green);
   color: var(--color-white);
-    fill: var(--color-white);
-
+  fill: var(--color-white);
 }
 
 .success-button:hover {
   background-color: var(--color-dark-green);
   fill: var(--color-white);
 }
+
+.male-button {
+  background: var(--color-light-blue);
+  color: var(--color-blue);
+}
+.male-button .icon {
+  fill: var(--color-blue);
+}
+
+.female-button {
+  background: var(--color-light-red);;
+  color: var(--color-dark-red);
+}
+.female-button .icon {
+  fill: var(--color-dark-red);
+}
+
 
 .button-state {
   transition:
