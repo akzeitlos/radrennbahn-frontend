@@ -10,6 +10,7 @@ const FinishPanel = ({
   onAddNumber,
   onRemovePosition,
   onConfirm,
+  finishPositionOffset = 0,
 }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") onAddNumber();
@@ -17,6 +18,11 @@ const FinishPanel = ({
 
   return (
     <div className="race-input__panel">
+      {finishPositionOffset > 0 && (
+        <p className="race-input__hint race-input__hint--finish">
+          Plätze 1–{finishPositionOffset} bereits durch Wertungsrunde vergeben → weiter ab Platz {finishPositionOffset + 1}
+        </p>
+      )}
       <NumberEntryRow
         inputRef={inputRef}
         value={numberInput}
@@ -24,7 +30,11 @@ const FinishPanel = ({
         onAdd={onAddNumber}
         onKeyDown={handleKeyDown}
       />
-      <PositionChips positions={currentPositions} onRemove={onRemovePosition} />
+      <PositionChips
+        positions={currentPositions}
+        onRemove={onRemovePosition}
+        startRank={finishPositionOffset + 1}
+      />
       <Button
         style="success"
         onClick={onConfirm}

@@ -1,0 +1,68 @@
+.rr-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-light-grey);
+  border-radius: var(--border-radius-medium);
+  margin-bottom: 0.75rem;
+}
+
+.rr-filter-bar__top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.rr-filter-bar__search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 160px;
+}
+
+.rr-filter-bar__clear {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--color-mid-grey);
+  line-height: 1;
+}
+
+.rr-filter-bar__gender-group {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.rr-filter-bar__classes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rr-filter-bar__classes-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-mid-grey);
+  white-space: nowrap;
+}
+
+.rr-filter-bar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.rr-filter-bar__count {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+  font-weight: 600;
+}

@@ -1,0 +1,161 @@
+.race-results {
+  min-height: unset !important;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.race-results__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.race-results__title {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-blue);
+}
+
+.race-results__counter {
+  font-size: 0.8rem;
+  color: var(--color-mid-grey);
+  font-weight: 600;
+}
+
+.race-results__empty {
+  color: var(--color-mid-grey);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* Scrollbare Tabelle */
+.race-results__table-wrap {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.race-results__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.race-results__table thead th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-mid-grey);
+  border-bottom: 2px solid var(--color-light-grey);
+  white-space: nowrap;
+}
+
+.race-results__table tbody td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--color-light-grey);
+  vertical-align: middle;
+}
+
+.race-results__row:last-child td {
+  border-bottom: none;
+}
+
+/* Spalten-Breiten */
+.race-results__col-rank    { width: 2.2rem; font-weight: 700; font-size: 1rem; }
+.race-results__col-nr      { width: 2.8rem; font-weight: 700; color: var(--color-blue); }
+.race-results__col-name    { min-width: 8rem; }
+.race-results__col-gender  { width: 4.5rem; }
+.race-results__col-club    { width: 9rem; }
+.race-results__col-classes { }
+.race-results__col-pts     { width: 5.5rem; text-align: right; }
+.race-results__col-laps    { width: 3.5rem; text-align: center; }
+.race-results__col-finish  { width: 4rem; text-align: center; }
+.race-results__col-status  { width: 3.5rem; text-align: center; }
+
+/* Header-Actions */
+.race-results__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Gender Badge */
+.rr-gender-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.rr-gender-badge .icon {
+  width: 11px;
+  height: 11px;
+}
+.rr-gender-badge--m { background: var(--color-light-blue); color: var(--color-blue); }
+.rr-gender-badge--f { background: #fce7f3; color: var(--color-dark-red); }
+
+/* Rennklassen Badges */
+.rr-class-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.rr-class-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--color-light-blue);
+  color: var(--color-blue);
+}
+
+.rr-dash { color: var(--color-mid-grey); }
+
+/* Punkte */
+.race-results__last-pts {
+  font-size: 0.7rem;
+  color: var(--color-mid-grey);
+  margin-left: 0.3rem;
+}
+
+/* Runden */
+.race-results__laps-up   { color: var(--color-dark-green); font-weight: 700; }
+.race-results__laps-down { color: var(--color-red); font-weight: 700; }
+.race-results__laps-zero { color: var(--color-mid-grey); }
+
+/* DNF / Ausgeschieden Zeile */
+.race-results__row--dnf td,
+.race-results__row--eliminated td {
+  opacity: 0.45;
+}
+
+/* Badges */
+.race-results__badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--border-radius-small);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.race-results__badge--ok {
+  background: #edf7e1;
+  color: var(--color-dark-green);
+}
+
+.race-results__badge--dnf {
+  background: #fde8e8;
+  color: var(--color-red);
+}
+
+.race-results__badge--elim {
+  background: #f3f3f3;
+  color: var(--color-dark-grey);
+}

@@ -72,8 +72,9 @@ export function computeResults(race, entries) {
 
     // Zieleinlauf
     if (entry.type === "finish") {
+      const offset = entry.positionOffset ?? 0;
       entry.positions.forEach((nr, idx) => {
-        if (state[nr]) state[nr].finishPosition = idx + 1;
+        if (state[nr]) state[nr].finishPosition = offset + idx + 1;
       });
       continue;
     }

@@ -137,7 +137,7 @@ const RaceSession = () => {
             onClick={handleSave}
             disabled={entries.length === 0}
           >
-            <SaveIcon className="icon" /> Speichern
+            Speichern
           </Button>
           {!race.isCompleted && (
             <Button style="success" onClick={() => setShowCompleteModal(true)}>

@@ -23,6 +23,7 @@ const ScoringPanel = ({
   scoringDone,
   scoringRoundCount,
   nextScoringRound,
+  finishPositionOffset = 0,
 }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") onAddNumber();
@@ -43,7 +44,7 @@ const ScoringPanel = ({
       {isFinaleActive && (
         <div className="race-input__finale-finish">
           <p className="race-input__hint race-input__hint--finish">
-            Zieleinlauf (optional)
+            Zieleinlauf ab Platz {finishPositionOffset + 1} (optional)
           </p>
           <NumberEntryRow
             inputRef={finishInputRef}
@@ -52,7 +53,11 @@ const ScoringPanel = ({
             onAdd={onAddFinishNumber}
             onKeyDown={(e) => { if (e.key === "Enter") onAddFinishNumber(); }}
           />
-          <PositionChips positions={finishPositions} onRemove={onRemoveFinishPosition} />
+          <PositionChips
+            positions={finishPositions}
+            onRemove={onRemoveFinishPosition}
+            startRank={finishPositionOffset + 1}
+          />
         </div>
       )}
 

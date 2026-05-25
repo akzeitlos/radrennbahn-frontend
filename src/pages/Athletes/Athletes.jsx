@@ -14,6 +14,7 @@ import useRaceClasses from "@/hooks/useRaceClasses.jsx";
 import { AuthContext } from "@/context/AuthContext.jsx";
 import Add from "@/assets/icons/add.svg?react";
 
+
 import "./Athletes.css";
 
 // ---- Filterfunktion ----

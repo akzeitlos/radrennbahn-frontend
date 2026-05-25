@@ -47,6 +47,28 @@ const RaceInput = ({
     isLastScoringRound &&
     activeScoringTab === "new";
 
+  // Wie viele Plätze werden in der letzten Wertungsrunde bereits vergeben?
+  // Diese Fahrer belegen Platz 1..N, der Zieleinlauf startet daher bei N+1.
+  const finishPositionOffset = (() => {
+    if (!needsFinish.includes(modeSlug)) return 0;
+    if (modeSlug === "points") {
+      const basePoints = [
+        race.pointsFirst ?? 5,
+        race.pointsSecond ?? 3,
+        race.pointsThird ?? 2,
+        race.pointsFourth ?? 1,
+      ];
+      return basePoints.length; // = 4
+    }
+    if (modeSlug === "tempo") return 2;
+    if (modeSlug === "danish") {
+      const lastRoundIndex = scoringRoundCount - 1;
+      const dist = race.danishScoringRounds?.[lastRoundIndex]?.pointsDistribution ?? [];
+      return dist.length;
+    }
+    return 0;
+  })();
+
   const dnfEntries = entries
     .map((e, i) => ({ ...e, index: i }))
     .filter((e) => e.type === "dnf");
@@ -104,18 +126,37 @@ const RaceInput = ({
       isLast: isLastScoringRound,
       positions: [...currentPositions],
     });
-    if (isFinaleActive && finishPositions.length > 0) {
-      onAddEntry({ type: "finish", positions: [...finishPositions] });
+
+    const finishAlreadySaved = isFinaleActive && finishPositions.length > 0;
+    if (finishAlreadySaved) {
+      onAddEntry({
+        type: "finish",
+        positions: [...finishPositions],
+        positionOffset: finishPositionOffset,
+      });
       setFinishPositions([]);
     }
+
     setCurrentPositions([]);
-    flash(`Wertung ${nextScoringRound} gespeichert ✓`, "success");
+
+    // Nach der finalen Wertungsrunde: automatisch zum Zieleinlauf-Tab wechseln,
+    // sofern der Modus einen separaten Zieleinlauf erwartet und noch keiner eingetragen wurde.
+    if (isLastScoringRound && needsFinish.includes(modeSlug) && !finishAlreadySaved) {
+      setActivePanel("finish");
+      flash(`Wertung ${nextScoringRound} gespeichert ✓ — Jetzt Zieleinlauf eintragen`, "success");
+    } else {
+      flash(`Wertung ${nextScoringRound} gespeichert ✓`, "success");
+    }
   };
 
   // ---- Reset-Runde bestätigen ----
   const confirmResetRound = () => {
     if (currentPositions.length === 0)
       return flash("Keine Nummern eingetragen");
+
+    const isEditingLastRound = editingRound.isLast ||
+      editingRound.roundNumber === scoringRoundCount;
+
     onUpdateEntry(editingRound.index, {
       type: "scoring",
       roundNumber: editingRound.roundNumber,
@@ -125,11 +166,17 @@ const RaceInput = ({
     setCurrentPositions([]);
     setResettingRound(null);
 
-    if (scoringDone < scoringRoundCount) {
+    // Wenn es die letzte Wertungsrunde war und der Modus einen Zieleinlauf braucht:
+    // → zum Zieleinlauf-Tab wechseln statt auf "neue Runde"
+    if (isEditingLastRound && needsFinish.includes(modeSlug)) {
+      setActivePanel("finish");
+      flash(`Wertung ${editingRound.roundNumber} gespeichert ✓ — Jetzt Zieleinlauf eintragen`, "success");
+    } else if (scoringDone < scoringRoundCount) {
       setActiveScoringTab("new");
+      flash(`Wertung ${editingRound.roundNumber} gespeichert ✓`, "success");
+    } else {
+      flash(`Wertung ${editingRound.roundNumber} gespeichert ✓`, "success");
     }
-
-    flash(`Wertung ${editingRound.roundNumber} gespeichert ✓`, "success");
   };
 
   // ---- Einzelne Position aus erledigter Runde entfernen ----
@@ -166,7 +213,11 @@ const RaceInput = ({
   const confirmFinish = () => {
     if (currentPositions.length === 0)
       return flash("Keine Nummern eingetragen");
-    onAddEntry({ type: "finish", positions: [...currentPositions] });
+    onAddEntry({
+      type: "finish",
+      positions: [...currentPositions],
+      positionOffset: finishPositionOffset,
+    });
     setCurrentPositions([]);
     flash("Zieleinlauf gespeichert ✓", "success");
   };
@@ -200,7 +251,8 @@ const RaceInput = ({
   const showScoring = modeSlug !== "scratch" && scoringDone < scoringRoundCount;
   const showFinish =
     modeSlug === "scratch" ||
-    (!noFinish.includes(modeSlug) && !needsFinish.includes(modeSlug));
+    (!noFinish.includes(modeSlug) && !needsFinish.includes(modeSlug)) ||
+    (needsFinish.includes(modeSlug) && scoringDone >= scoringRoundCount);
 
   const tabs = [
     showScoring && {
@@ -300,6 +352,7 @@ const RaceInput = ({
           scoringDone={scoringDone}
           scoringRoundCount={scoringRoundCount}
           nextScoringRound={nextScoringRound}
+          finishPositionOffset={finishPositionOffset}
         />
       )}
 
@@ -334,6 +387,7 @@ const RaceInput = ({
             setCurrentPositions((prev) => prev.filter((_, i) => i !== idx))
           }
           onConfirm={confirmFinish}
+          finishPositionOffset={finishPositionOffset}
         />
       )}
 
