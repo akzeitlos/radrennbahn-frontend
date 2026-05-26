@@ -1,16 +1,7 @@
 import Input from "@/components/FormElements/Input/Input.jsx";
 import Textarea from "@/components/FormElements/Textarea/Textarea.jsx";
-import Button from "@/components/Button/Button.jsx";
-
-const toSlug = (str) =>
-  str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ß/g, "ss")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+import FormActions from "@/components/FormActions/FormActions.jsx";
+import { toSlug } from "@/utils/stringUtils.js";
 
 const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
 
@@ -35,7 +26,6 @@ const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
         onChange={handleNameChange}
         required
       />
-
       <Input
         name="slug"
         label="Slug (Kurzname)"
@@ -44,7 +34,6 @@ const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
         onChange={handleSlugChange}
         required
       />
-
       <Textarea
         name="description"
         label="Beschreibung"
@@ -52,17 +41,7 @@ const RaceClassForm = ({ formData, onChange, onSubmit, onCancel, error }) => {
         onChange={onChange}
         placeholder="Beschreibung der Rennklasse"
       />
-
-      <div className="button-wrapper">
-        <Button type="submit" style="primary">
-          Speichern
-        </Button>
-        <Button type="button" style="secondary" onClick={onCancel}>
-          Abbrechen
-        </Button>
-      </div>
-
-      {error && <p className="error-message">{error}</p>}
+      <FormActions onCancel={onCancel} error={error} />
     </form>
   );
 };

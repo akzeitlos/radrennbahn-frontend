@@ -13,6 +13,7 @@ function Button({
   square = false,
   small = false,
   extraClassName = "",
+  cssStyle,
 }) {
   const classes = (stateStyle) => [
     "button",
@@ -58,6 +59,7 @@ function Button({
       onClick={onClick}
       disabled={disabled}
       className={classes(style)}
+      style={cssStyle}
     >
       {children}
     </button>

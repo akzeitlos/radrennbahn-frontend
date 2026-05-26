@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import Button from "@/components/Button/Button.jsx";
+import PdfIconAsset from "@/assets/icons/pdf.svg?react";
+import SpinnerIconAsset from "@/assets/icons/spinner.svg?react";
 import "./RaceResultsPdfExport.css";
 
 const BLUE       = "#004177";
@@ -76,13 +79,14 @@ const styles = StyleSheet.create({
   rowDnf:  { opacity: 0.45 },
   cell:    { fontSize: 8.5, color: DARK_GREY },
 
-  colRank:    { width: "7%"  },
-  colNr:      { width: "8%"  },
-  colName:    { width: "20%" },
-  colGender:  { width: "10%" },
-  colClub:    { width: "18%" },
-  colClasses: { width: "17%" },
-  colPts:     { width: "10%", textAlign: "right" },
+  colRank:    { width: "6%"  },
+  colNr:      { width: "7%"  },
+  colName:    { width: "19%" },
+  colGender:  { width: "9%"  },
+  colClub:    { width: "16%" },
+  colClasses: { width: "15%" },
+  colPts:     { width: "9%",  textAlign: "right" },
+  colLaps:    { width: "9%",  textAlign: "right" },
   colStatus:  { width: "10%", textAlign: "center" },
 
   rankText:  { fontFamily: "Helvetica-Bold", fontSize: 9, color: BLUE },
@@ -148,8 +152,8 @@ const ClassBadges = ({ raceClasses }) => {
 
 const StatusBadge = ({ dnf, eliminated }) => {
   if (dnf)        return <View style={[styles.statusBadge, styles.statusBadgeDnf]}><Text style={styles.statusTextDnf}>DNF</Text></View>;
-  if (eliminated) return <View style={[styles.statusBadge, styles.statusBadgeElim]}><Text style={styles.statusTextElim}>OUT</Text></View>;
-  return           <View style={[styles.statusBadge, styles.statusBadgeOk]}><Text style={styles.statusTextOk}>✓</Text></View>;
+  if (eliminated) return <View style={[styles.statusBadge, styles.statusBadgeElim]}><Text style={styles.statusTextElim}>AUS</Text></View>;
+  return           <View style={[styles.statusBadge, styles.statusBadgeOk]}><Text style={styles.statusTextOk}>OK</Text></View>;
 };
 
 // ── PDF-Dokument ───────────────────────────────────────────────────────────
@@ -158,11 +162,12 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
   const now = new Date().toLocaleDateString("de-DE", {
     day: "2-digit", month: "2-digit", year: "numeric",
   });
-  const showPoints = ["points", "danish", "tempo"].includes(modeSlug);
-  const showLaps   = race.lapdownMode === "lapped";
+  const showPoints   = ["points", "danish", "tempo"].includes(modeSlug);
+  const lapdownMode  = race.lapdownMode;
+  const showLaps     = lapdownMode === "lapped" || lapdownMode === "points";
   const filterLabels = buildFilterLabels(filters, raceClasses);
 
-  const MEDAL = ["🥇", "🥈", "🥉"];
+
 
   return (
     <Document title={`Ergebnisse – ${race.raceMode?.title ?? "Rennen"}`} author="Radrennbahn">
@@ -174,7 +179,13 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
             <Text style={styles.title}>
               {race.raceMode?.title ?? "Rennergebnisse"}
             </Text>
-            {race.raceClasses?.length > 0 && (
+            {race.date && (
+              <Text style={styles.subtitle}>
+                {new Date(race.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })}
+                {race.raceClasses?.length > 0 ? ` · ${race.raceClasses.map((rc) => rc.name).join(", ")}` : ""}
+              </Text>
+            )}
+            {!race.date && race.raceClasses?.length > 0 && (
               <Text style={styles.subtitle}>
                 {race.raceClasses.map((rc) => rc.name).join(", ")}
               </Text>
@@ -198,13 +209,21 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
           <Text style={[styles.tableHeaderCell, styles.colClub]}>Verein</Text>
           <Text style={[styles.tableHeaderCell, styles.colClasses]}>Klassen</Text>
           {showPoints && <Text style={[styles.tableHeaderCell, styles.colPts]}>Punkte</Text>}
+          {showLaps && <Text style={[styles.tableHeaderCell, styles.colLaps]}>{lapdownMode === "points" ? "Überr." : "Runden"}</Text>}
           <Text style={[styles.tableHeaderCell, styles.colStatus]}>Status</Text>
         </View>
 
         {/* Zeilen */}
-        {results.map((r, idx) => {
-          const rank = r.dnf || r.eliminated ? null : idx + 1;
-          const rankLabel = rank && rank <= 3 ? MEDAL[rank - 1] : (rank ? String(rank) : "—");
+        {(() => {
+          const rankMap = new Map();
+          if (modeSlug === "elimination") {
+            results.filter((r) => !r.dnf).forEach((r, i) => rankMap.set(r.athleteNumber, i + 1));
+          } else {
+            results.filter((r) => !r.dnf && !r.eliminated).forEach((r, i) => rankMap.set(r.athleteNumber, i + 1));
+          }
+          return results.map((r, idx) => {
+          const rank = r.dnf ? null : (rankMap.get(r.athleteNumber) ?? null);
+          const rankLabel = rank ? String(rank) : "—";
           const isAlt = idx % 2 === 1;
 
           // Athlet-Daten aus race.athletes
@@ -241,12 +260,24 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
                   </Text>
                 </View>
               )}
+              {showLaps && (
+                <View style={styles.colLaps}>
+                  <Text style={[styles.cell, { textAlign: "right", color: lapdownMode === "points"
+                    ? (r.lapPoints > 0 ? GREEN : r.lapPoints < 0 ? RED : DARK_GREY)
+                    : (r.laps > 0 ? GREEN : r.laps < 0 ? RED : DARK_GREY) }]}>
+                    {lapdownMode === "points"
+                      ? (r.lapPoints > 0 ? `+${r.lapPoints}` : r.lapPoints < 0 ? String(r.lapPoints) : "—")
+                      : (r.laps > 0 ? `+${r.laps}` : r.laps < 0 ? String(r.laps) : "0")}
+                  </Text>
+                </View>
+              )}
               <View style={styles.colStatus}>
                 <StatusBadge dnf={r.dnf} eliminated={r.eliminated} />
               </View>
             </View>
           );
-        })}
+        })
+        })()}
 
         {/* Footer */}
         <View style={styles.footer} fixed>
@@ -291,14 +322,12 @@ const RaceResultsPdfExport = ({ results, race, modeSlug, filters, raceClasses })
   };
 
   return (
-    <button
-      className={`rr-pdf__btn ${loading ? "rr-pdf__btn--loading" : ""}`}
+    <Button
       onClick={handleDownload}
       disabled={loading || results.length === 0}
-      title={results.length === 0 ? "Keine Ergebnisse zum Exportieren" : "Ergebnisse als PDF herunterladen"}
     >
-      {loading ? (<><SpinnerIcon />PDF wird erstellt …</>) : (<><PdfIcon />PDF exportieren</>)}
-    </button>
+      {loading ? <><SpinnerIcon />PDF wird erstellt …</> : <><PdfIcon />PDF exportieren</>}
+    </Button>
   );
 };
 
@@ -335,22 +364,8 @@ function buildFilename(race, filters, raceClasses) {
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 
-const PdfIcon = () => (
-  <svg className="rr-pdf__icon" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <line x1="16" y1="13" x2="8" y2="13"/>
-    <line x1="16" y1="17" x2="8" y2="17"/>
-    <polyline points="10 9 9 9 8 9"/>
-  </svg>
-);
+const PdfIcon = () => <PdfIconAsset />;
 
-const SpinnerIcon = () => (
-  <svg className="rr-pdf__icon rr-pdf__icon--spin" viewBox="0 0 24 24"
-    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-  </svg>
-);
+const SpinnerIcon = () => <SpinnerIconAsset className="rr-pdf__icon rr-pdf__icon--spin" />;
 
 export default RaceResultsPdfExport;

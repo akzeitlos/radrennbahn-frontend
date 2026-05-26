@@ -1,5 +1,6 @@
 .add-card {
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
   background-color: transparent;
   border: 2px dashed var(--color-white);

@@ -30,6 +30,12 @@
   color: var(--color-blue);
 }
 
+.card__subtitle {
+  color: var(--color-mid-grey);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
 .card-content {
   font-size: 0.95rem;
   color: var(--color-dark-grey);
@@ -79,7 +85,7 @@
   color: var(--color-white);
 }
 
-.button-wrapper {
+.card__actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

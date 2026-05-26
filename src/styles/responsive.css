@@ -1,0 +1,216 @@
+/* ============================================================
+   responsive.css — Tablet & Mobile ≤ 980px
+   Alle responsiven Anpassungen für Bildschirme bis 980px.
+   Kann ohne Seiteneffekte auf den Desktop entfernt werden.
+   ============================================================ */
+
+@media (max-width: 980px) {
+
+  /* ── Layout ──────────────────────────────────────────────── */
+
+  .main-content {
+    padding: 1.25rem;
+    padding-top: 4rem; /* Platz für Hamburger-Button */
+    gap: 1rem;
+  }
+
+  /* ── Navigation ──────────────────────────────────────────── */
+
+  /* Hamburger anzeigen */
+  .hamburger-button {
+    display: block;
+    height: 1.5rem;
+    width: 1.5rem;
+    fill: var(--color-white);
+    top: 1.25rem;
+    left: 1.25rem;
+  }
+
+  /* Hamburger-Icon Farbe */
+  .hamburger-button svg {
+    fill: var(--color-white);
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* Sidebar ausblenden wenn geschlossen */
+  .side-nav:not(.mobile-open) {
+    transform: translateX(-120%);
+    transition: transform 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300px;
+    z-index: 1000;
+  }
+
+  /* Collapse-Toggle auf Tablet/Mobile verstecken */
+  .collapse-toggle {
+    display: none !important;
+  }
+
+  /* Schließen-Button einblenden */
+  .mobile-close-button {
+    display: block;
+  }
+
+  /* Nav-Inhalt nach unten schieben, damit er nicht hinter dem X-Button liegt */
+  .side-nav.mobile-open .nav-top {
+    padding-top: 2.5rem;
+  }
+
+  /* ── Karten ──────────────────────────────────────────────── */
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  /* Kein Hover-Lift auf Touch */
+  .card:hover {
+    transform: none;
+  }
+
+  /* Aktions-Buttons immer sichtbar (kein Hover auf Touch) */
+  .hover-buttons {
+    opacity: 1;
+  }
+
+  /* AddCard kompakt – kein großes leeres Feld auf Mobile */
+  .add-card,
+  .card-container .add-card {
+    min-height: unset;
+    padding: 0.875rem;
+  }
+
+  /* AddCard-Hover-Effekt deaktivieren */
+  .add-card:hover {
+    transform: none;
+  }
+
+  /* ── Race Session ─────────────────────────────────────────── */
+
+  .race-session__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .race-session__title {
+    font-size: 1.25rem;
+  }
+
+  .race-session__actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .race-session__actions .button {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  /* ── Race Input ───────────────────────────────────────────── */
+
+  /* Tabs kleiner */
+  .race-input__tabs .button {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  /* Eintrag-Zeile umbrechen */
+  .race-input__entry-row {
+    flex-wrap: wrap;
+  }
+
+  /* ── Race Results Tabelle ─────────────────────────────────── */
+
+  /* Horizontales Scrollen für die Tabelle */
+  .race-results__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -0.1rem;
+  }
+
+  .race-results__table {
+    min-width: 480px;
+  }
+
+  /* Weniger wichtige Spalten ausblenden */
+  .race-results__col-club,
+  th.race-results__col-club,
+  td.race-results__col-club,
+  .race-results__col-classes,
+  th.race-results__col-classes,
+  td.race-results__col-classes {
+    display: none;
+  }
+
+  /* ── Race Form ────────────────────────────────────────────── */
+
+  /* 2-Spalten-Grid → 1 Spalte */
+  .race-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Formular-Karten auf CRUD-Seiten ─────────────────────── */
+
+  .card-edit .form {
+    gap: 0.75rem;
+  }
+
+  /* ── Formular-Modal (Athleten) ────────────────────────────── */
+
+  /* Slide-up aus dem unteren Bildrand */
+  .form-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .form-modal__content {
+    max-width: 100% !important;
+    width: 100%;
+    border-radius: var(--border-radius-big) var(--border-radius-big) 0 0;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .form-modal__content .card {
+    border-radius: var(--border-radius-big) var(--border-radius-big) 0 0;
+    min-height: unset;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  /* ── Auth-Seiten (Login, Passwort) ────────────────────────── */
+
+  .auth-layout {
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+  }
+
+  /* ── Button-Wrapper in Formularen ────────────────────────── */
+
+  .button-wrapper {
+    flex-direction: column;
+  }
+
+  .button-wrapper .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── Athleten Filterbar ───────────────────────────────────── */
+
+  .athletes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .athletes-header__add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

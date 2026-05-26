@@ -5,6 +5,7 @@ import ScoringEditPanel from "./components/ScoringEditPanel.jsx";
 import FinishPanel from "./components/FinishPanel.jsx";
 import LapPanel from "./components/LapPanel.jsx";
 import DnfPanel from "./components/DnfPanel.jsx";
+import PositionChips from "./components/PositionChips.jsx";
 import "./RaceInput.css";
 
 const needsFinish = ["points", "tempo", "danish"];
@@ -17,6 +18,8 @@ const RaceInput = ({
   onAddEntry,
   onRemoveEntry,
   onUpdateEntry,
+  onResetFinalRound,
+  onPendingChange,
 }) => {
   const [activePanel, setActivePanel] = useState("scoring");
   const [activeScoringTab, setActiveScoringTab] = useState("new");
@@ -35,13 +38,19 @@ const RaceInput = ({
     inputRef.current?.focus();
   }, [activePanel, currentPositions, activeScoringTab]);
 
+  const isElimination = modeSlug === "elimination";
   const athletes = race.athletes ?? [];
   const totalRounds = race.rounds ?? 0;
   const interval = race.scoringInterval ?? 1;
-  const scoringRoundCount = Math.floor(totalRounds / interval);
+  const scoringRoundCount = isElimination
+    ? 1
+    : Math.floor(totalRounds / interval);
   const scoringDone = entries.filter((e) => e.type === "scoring").length;
   const nextScoringRound = scoringDone + 1;
   const isLastScoringRound = nextScoringRound === scoringRoundCount;
+  const danishMax = modeSlug === "danish"
+    ? (race.danishScoringRounds?.[nextScoringRound - 1]?.pointsDistribution?.length ?? 0)
+    : null;
   const isFinaleActive =
     needsFinish.includes(modeSlug) &&
     isLastScoringRound &&
@@ -74,8 +83,17 @@ const RaceInput = ({
     .filter((e) => e.type === "dnf");
   const dnfNumbers = dnfEntries.map((e) => e.athleteNumber);
 
+  const eliminatedNumbers = isElimination
+    ? entries
+        .filter((e) => e.type === "scoring")
+        .map((e) => e.positions[e.positions.length - 1])
+        .filter(Boolean)
+    : [];
+
   const activeAthletes = athletes.filter(
-    (a) => !dnfNumbers.includes(a.raceNumber),
+    (a) =>
+      !dnfNumbers.includes(a.raceNumber) &&
+      !eliminatedNumbers.includes(a.raceNumber),
   );
   const allRaceNumbers = activeAthletes.map((a) => a.raceNumber);
   const alreadyPositioned = new Set(currentPositions);
@@ -84,6 +102,9 @@ const RaceInput = ({
   const doneRounds = entries
     .map((e, i) => ({ ...e, index: i }))
     .filter((e) => e.type === "scoring");
+
+  const finalDoneRound = doneRounds.find((r) => r.isLast);
+  const finishEntry = entries.find((e) => e.type === "finish") ?? null;
 
   const editingRound =
     activeScoringTab !== "new"
@@ -102,6 +123,14 @@ const RaceInput = ({
     if (!allRaceNumbers.includes(nr)) return flash(`Nr. ${nr} nicht im Rennen`);
     if (alreadyPositioned.has(nr))
       return flash(`Nr. ${nr} bereits eingetragen`);
+    if (isElimination && currentPositions.length >= allRaceNumbers.length - 1)
+      return flash("Letzter Fahrer ist der Gewinner");
+    if (modeSlug === "tempo" && currentPositions.length >= 2)
+      return flash("Temporunde: maximal 2 Fahrer eintragen");
+    if (modeSlug === "points" && currentPositions.length >= 4)
+      return flash("Punkterennen: maximal 4 Fahrer eintragen");
+    if (modeSlug === "danish" && danishMax !== null && currentPositions.length >= danishMax)
+      return flash(danishMax === 0 ? "Keine Punkte für diese Runde konfiguriert" : `Runde ${nextScoringRound}: maximal ${danishMax} Fahrer`);
     setCurrentPositions((prev) => [...prev, nr]);
     setNumberInput("");
   };
@@ -116,18 +145,18 @@ const RaceInput = ({
     finishInputRef.current?.focus();
   };
 
-  // ---- Wertungsrunde bestätigen ----
+  // ---- Wertungsrunde / Ausscheidung bestätigen ----
   const confirmScoring = () => {
     if (currentPositions.length === 0)
       return flash("Keine Nummern eingetragen");
     onAddEntry({
       type: "scoring",
       roundNumber: nextScoringRound,
-      isLast: isLastScoringRound,
+      isLast: isElimination ? false : isLastScoringRound,
       positions: [...currentPositions],
     });
 
-    const finishAlreadySaved = isFinaleActive && finishPositions.length > 0;
+    const finishAlreadySaved = !isElimination && isFinaleActive && finishPositions.length > 0;
     if (finishAlreadySaved) {
       onAddEntry({
         type: "finish",
@@ -139,11 +168,11 @@ const RaceInput = ({
 
     setCurrentPositions([]);
 
-    // Nach der finalen Wertungsrunde: automatisch zum Zieleinlauf-Tab wechseln,
-    // sofern der Modus einen separaten Zieleinlauf erwartet und noch keiner eingetragen wurde.
-    if (isLastScoringRound && needsFinish.includes(modeSlug) && !finishAlreadySaved) {
-      setActivePanel("finish");
-      flash(`Wertung ${nextScoringRound} gespeichert ✓ — Jetzt Zieleinlauf eintragen`, "success");
+    if (isElimination) {
+      flash(`Runde ${nextScoringRound}: Ausscheidung gespeichert ✓`, "success");
+    } else if (isLastScoringRound && needsFinish.includes(modeSlug)) {
+      setActiveScoringTab(nextScoringRound);
+      flash(`Finale Runde gespeichert ✓`, "success");
     } else {
       flash(`Wertung ${nextScoringRound} gespeichert ✓`, "success");
     }
@@ -166,11 +195,8 @@ const RaceInput = ({
     setCurrentPositions([]);
     setResettingRound(null);
 
-    // Wenn es die letzte Wertungsrunde war und der Modus einen Zieleinlauf braucht:
-    // → zum Zieleinlauf-Tab wechseln statt auf "neue Runde"
     if (isEditingLastRound && needsFinish.includes(modeSlug)) {
-      setActivePanel("finish");
-      flash(`Wertung ${editingRound.roundNumber} gespeichert ✓ — Jetzt Zieleinlauf eintragen`, "success");
+      flash(`Finale Runde gespeichert ✓`, "success");
     } else if (scoringDone < scoringRoundCount) {
       setActiveScoringTab("new");
       flash(`Wertung ${editingRound.roundNumber} gespeichert ✓`, "success");
@@ -179,25 +205,18 @@ const RaceInput = ({
     }
   };
 
-  // ---- Einzelne Position aus erledigter Runde entfernen ----
-  const removeFromEditRound = (idx) => {
-    if (!editingRound) return;
-    const updated = [...editingRound.positions];
-    updated.splice(idx, 1);
-    onUpdateEntry(editingRound.index, {
-      type: "scoring",
-      roundNumber: editingRound.roundNumber,
-      isLast: editingRound.isLast,
-      positions: updated,
-    });
-    if (updated.length === 0) {
-      setResettingRound(editingRound.roundNumber);
-      setCurrentPositions([]);
-    }
-  };
-
   // ---- Runde zurücksetzen ----
   const resetRound = () => {
+    if (editingRound.isLast) {
+      onResetFinalRound(editingRound.index);
+      setActiveScoringTab("new");
+      setCurrentPositions([]);
+      setFinishPositions([]);
+      setResettingRound(null);
+      flash("Finale Runde zurückgesetzt", "success");
+      return;
+    }
+
     onUpdateEntry(editingRound.index, {
       type: "scoring",
       roundNumber: editingRound.roundNumber,
@@ -211,14 +230,22 @@ const RaceInput = ({
 
   // ---- Zieleinlauf ----
   const confirmFinish = () => {
-    if (currentPositions.length === 0)
-      return flash("Keine Nummern eingetragen");
     onAddEntry({
       type: "finish",
       positions: [...currentPositions],
       positionOffset: finishPositionOffset,
     });
     setCurrentPositions([]);
+    flash("Zieleinlauf gespeichert ✓", "success");
+  };
+
+  const confirmFinishEntry = () => {
+    onAddEntry({
+      type: "finish",
+      positions: [...finishPositions],
+      positionOffset: finishPositionOffset,
+    });
+    setFinishPositions([]);
     flash("Zieleinlauf gespeichert ✓", "success");
   };
 
@@ -248,21 +275,20 @@ const RaceInput = ({
     flash(`Nr. ${nr}: DNF gesetzt ✓`, "success");
   };
 
-  const showScoring = modeSlug !== "scratch" && scoringDone < scoringRoundCount;
+  const showScoring = isElimination
+    ? true
+    : modeSlug !== "scratch" && (scoringDone < scoringRoundCount || !!finalDoneRound);
   const showFinish =
     modeSlug === "scratch" ||
-    (!noFinish.includes(modeSlug) && !needsFinish.includes(modeSlug)) ||
-    (needsFinish.includes(modeSlug) && scoringDone >= scoringRoundCount);
+    (!noFinish.includes(modeSlug) && !needsFinish.includes(modeSlug));
 
   const tabs = [
     showScoring && {
       key: "scoring",
-      label: isLastScoringRound
-        ? `Wertung ${nextScoringRound} (Finale)`
-        : `Wertung ${nextScoringRound}`,
+      label: isElimination ? "Ausscheidung" : "Wertung",
     },
     showFinish && { key: "finish", label: "Zieleinlauf" },
-    { key: "lap", label: "Überrundung" },
+    !isElimination && { key: "lap", label: "Überrundung" },
     { key: "dnf", label: "DNF" },
   ].filter(Boolean);
 
@@ -271,6 +297,20 @@ const RaceInput = ({
       setActivePanel("finish");
     }
   }, [modeSlug]);
+
+  useEffect(() => {
+    if (!onPendingChange) return;
+    if (isElimination) {
+      const isPendingPanel = activePanel === "scoring" && activeScoringTab === "new";
+      onPendingChange(isPendingPanel ? currentPositions : []);
+    } else if (modeSlug === "scratch") {
+      const isPendingPanel = activePanel === "finish" && !finishEntry;
+      onPendingChange(isPendingPanel ? currentPositions : []);
+    } else if (["points", "tempo", "danish"].includes(modeSlug)) {
+      const isPendingPanel = activePanel === "scoring" && activeScoringTab === "new" && scoringDone < scoringRoundCount;
+      onPendingChange(isPendingPanel ? currentPositions : []);
+    }
+  }, [currentPositions, activePanel, activeScoringTab, isElimination, modeSlug, finishEntry, scoringDone, scoringRoundCount]);
 
   return (
     <div className="race-input card">
@@ -285,6 +325,9 @@ const RaceInput = ({
               setActivePanel(tab.key);
               setCurrentPositions([]);
               setNumberInput("");
+              if (tab.key === "scoring" && !isElimination && scoringDone >= scoringRoundCount && finalDoneRound) {
+                setActiveScoringTab(finalDoneRound.roundNumber);
+              }
             }}
           >
             {tab.label}
@@ -293,7 +336,7 @@ const RaceInput = ({
       </div>
 
       {/* Reihe 2 – Sub-Tabs */}
-      {activePanel === "scoring" && scoringDone > 0 && (
+      {activePanel === "scoring" && scoringDone > 0 && !isElimination && (
         <div className="race-input__tabs race-input__tabs--sub">
           {doneRounds.map((r) => (
             <Button
@@ -309,26 +352,38 @@ const RaceInput = ({
                 setResettingRound(null);
               }}
             >
-              Runde {r.roundNumber}
+              {!isElimination && r.isLast ? "Finale Runde" : `Runde ${r.roundNumber}`}
             </Button>
           ))}
-          <Button
-            style={activeScoringTab === "new" ? "primary" : "secondary"}
-            small
-            onClick={() => {
-              setActiveScoringTab("new");
-              setCurrentPositions([]);
-              setNumberInput("");
-              setResettingRound(null);
-            }}
-          >
-            Runde {nextScoringRound}
-          </Button>
+          {(isElimination || scoringDone < scoringRoundCount) && (
+            <Button
+              style={activeScoringTab === "new" ? "primary-active" : "primary"}
+              small
+              onClick={() => {
+                setActiveScoringTab("new");
+                setCurrentPositions([]);
+                setNumberInput("");
+                setResettingRound(null);
+              }}
+            >
+              {!isElimination && isLastScoringRound ? "Finale Runde" : `Runde ${nextScoringRound}`}
+            </Button>
+          )}
         </div>
       )}
 
       {/* ---- Panels ---- */}
-      {activePanel === "scoring" && activeScoringTab === "new" && (
+      {activePanel === "scoring" && isElimination && scoringDone > 0 && (
+        <div className="race-input__panel">
+          <PositionChips
+            positions={entries.find((e) => e.type === "scoring")?.positions ?? []}
+            isElimination={true}
+          />
+          <p className="race-input__hint">Ausscheidungsrennen abgeschlossen.</p>
+        </div>
+      )}
+
+      {activePanel === "scoring" && activeScoringTab === "new" && (isElimination ? scoringDone === 0 : scoringDone < scoringRoundCount) && (
         <ScoringPanel
           inputRef={inputRef}
           finishInputRef={finishInputRef}
@@ -353,6 +408,9 @@ const RaceInput = ({
           scoringRoundCount={scoringRoundCount}
           nextScoringRound={nextScoringRound}
           finishPositionOffset={finishPositionOffset}
+          isElimination={isElimination}
+          activeCount={isElimination ? activeAthletes.length : null}
+          minPositions={danishMax === 0 ? 0 : 1}
         />
       )}
 
@@ -370,13 +428,34 @@ const RaceInput = ({
             onRemovePosition={(idx) =>
               setCurrentPositions((prev) => prev.filter((_, i) => i !== idx))
             }
-            onRemoveFromRound={removeFromEditRound}
             onReset={resetRound}
             onConfirmReset={confirmResetRound}
+            needsFinish={editingRound.isLast && needsFinish.includes(modeSlug)}
+            finishEntry={finishEntry}
+            finishInputRef={finishInputRef}
+            finishInput={finishInput}
+            setFinishInput={setFinishInput}
+            finishPositions={finishPositions}
+            onAddFinishNumber={addFinishNumber}
+            onRemoveFinishPosition={(idx) =>
+              setFinishPositions((prev) => prev.filter((_, i) => i !== idx))
+            }
+            onConfirmFinish={confirmFinishEntry}
+            finishPositionOffset={finishPositionOffset}
           />
         )}
 
-      {activePanel === "finish" && (
+      {activePanel === "finish" && finishEntry && (
+        <div className="race-input__panel">
+          <PositionChips
+            positions={finishEntry.positions}
+            startRank={(finishEntry.positionOffset ?? 0) + 1}
+          />
+          <p className="race-input__hint">Zieleinlauf bestätigt.</p>
+        </div>
+      )}
+
+      {activePanel === "finish" && !finishEntry && (
         <FinishPanel
           inputRef={inputRef}
           numberInput={numberInput}

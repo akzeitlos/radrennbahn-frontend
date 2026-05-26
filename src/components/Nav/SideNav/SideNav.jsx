@@ -40,7 +40,7 @@ export default function SideNav() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768 && mobileOpen) {
+      if (window.innerWidth > 980 && mobileOpen) {
         setMobileOpen(false);
       }
     };
@@ -89,8 +89,9 @@ export default function SideNav() {
               <NavItem to="/clubs" label="Vereine" />
             </NavItem>
 
-            <NavItem Icon={Races} label="Rennen" subMenuKey="races" activePaths={["/races", "/race-modes", "/race-classes"]}>
+            <NavItem Icon={Races} label="Rennen" subMenuKey="races" activePaths={["/races", "/race-modes", "/race-classes", "/archive"]}>
               <NavItem to="/races" label="Rennen" />
+              <NavItem to="/archive" label="Renn-Archiv" />
               {user?.roles.includes("admin") && (
                 <>
                   <NavItem to="/race-modes" label="Rennmodi" />

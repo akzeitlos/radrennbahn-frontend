@@ -20,6 +20,8 @@ const RaceForm = ({
   const modeType = selectedMode?.slug;
 
   const modeSelected = !!selectedMode;
+  const isElimination = modeType === "elimination";
+  const isScratch = modeType === "scratch";
   const showPoints =
     modeSelected &&
     (modeType === "points" || modeType === "tempo" || modeType === "danish");
@@ -100,7 +102,7 @@ const RaceForm = ({
             options={raceModes.map((m) => ({ value: m.id, label: m.title }))}
           />
 
-          {modeSelected && (
+          {modeSelected && !isElimination && !isScratch && (
             <>
               <Input
                 name="rounds"
@@ -117,17 +119,19 @@ const RaceForm = ({
                 value={formData.scoringInterval}
                 onChange={onChange}
               />
-              <Select
-                label="Überrundungsmodus"
-                name="lapdownMode"
-                value={formData.lapdownMode}
-                onChange={onChange}
-                options={[
-                  { value: "lapped", label: "Überrundung registrieren" },
-                  { value: "points", label: "Punkteverlust bei Überrundung" },
-                ]}
-              />
             </>
+          )}
+          {modeSelected && !isElimination && (
+            <Select
+              label="Überrundungsmodus"
+              name="lapdownMode"
+              value={formData.lapdownMode}
+              onChange={onChange}
+              options={[
+                { value: "lapped", label: "Überrundung registrieren" },
+                { value: "points", label: "Punkteverlust bei Überrundung" },
+              ]}
+            />
           )}
         </div>
 

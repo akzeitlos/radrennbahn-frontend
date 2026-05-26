@@ -25,6 +25,7 @@ const RaceSession = () => {
   const navigate = useNavigate();
 
   const [entries, setEntries] = useState([]);
+  const [pendingPositions, setPendingPositions] = useState([]);
   const [saveState, setSaveState] = useState("idle");
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
@@ -77,6 +78,13 @@ const RaceSession = () => {
     setSaveState("idle");
   }, []);
 
+  const resetFinalRound = useCallback((scoringIndex) => {
+    setEntries((prev) =>
+      prev.filter((e, i) => i !== scoringIndex && e.type !== "finish"),
+    );
+    setSaveState("idle");
+  }, []);
+
   const handleSave = async () => {
     if (!race) return;
     setSaveState("saving");
@@ -119,7 +127,50 @@ const RaceSession = () => {
     return <p className="race-session__not-found">Rennen nicht gefunden.</p>;
 
   const modeSlug = race.raceMode?.slug;
-  const results = computeResults(race, entries);
+
+  const liveEntries = (() => {
+    if (pendingPositions.length === 0) return entries;
+    if (modeSlug === "elimination") {
+      return [...entries, {
+        type: "scoring",
+        roundNumber: entries.filter((e) => e.type === "scoring").length + 1,
+        isLast: false,
+        positions: pendingPositions,
+      }];
+    }
+    if (modeSlug === "scratch" && !entries.some((e) => e.type === "finish")) {
+      return [...entries, { type: "finish", positions: pendingPositions, positionOffset: 0 }];
+    }
+    if (["points", "tempo", "danish"].includes(modeSlug)) {
+      const scoringDone = entries.filter((e) => e.type === "scoring").length;
+      const totalRounds = race.rounds ?? 0;
+      const interval = race.scoringInterval ?? 1;
+      const scoringRoundCount = Math.floor(totalRounds / interval);
+      const nextRound = scoringDone + 1;
+      const isLastRound = nextRound === scoringRoundCount;
+      return [...entries, {
+        type: "scoring",
+        roundNumber: nextRound,
+        isLast: isLastRound,
+        positions: pendingPositions,
+      }];
+    }
+    return entries;
+  })();
+
+  const results = computeResults(race, liveEntries);
+
+  const athletes = race.athletes ?? [];
+  const scoringCount = entries.filter((e) => e.type === "scoring").length;
+  const scoringRoundCount = modeSlug === "elimination"
+    ? 1
+    : Math.floor((race.rounds ?? 0) / (race.scoringInterval ?? 1));
+  const isFinal =
+    modeSlug === "elimination"
+      ? scoringCount >= 1
+      : modeSlug === "scratch"
+      ? entries.some((e) => e.type === "finish")
+      : scoringRoundCount > 0 && scoringCount >= scoringRoundCount;
 
   return (
     <div className="race-session">
@@ -139,7 +190,11 @@ const RaceSession = () => {
           >
             Speichern
           </Button>
-          {!race.isCompleted && (
+          {race.isCompleted ? (
+            <Button style="success" disabled cssStyle={{ opacity: 1, cursor: "default" }}>
+              <CheckIcon className="icon" /> Rennen abgeschlossen
+            </Button>
+          ) : isFinal && (
             <Button style="success" onClick={() => setShowCompleteModal(true)}>
               <CheckIcon className="icon" /> Rennen abschließen
             </Button>
@@ -157,6 +212,8 @@ const RaceSession = () => {
         onAddEntry={addEntry}
         onRemoveEntry={removeEntry}
         onUpdateEntry={updateEntry}
+        onResetFinalRound={resetFinalRound}
+        onPendingChange={setPendingPositions}
       />
 
       <RaceResults

@@ -26,13 +26,17 @@ export function computeResults(race, entries) {
       name: `${a.firstname} ${a.lastname}`,
       points: 0,
       laps: 0,           // +1 = Überrundung erkämpft, -1 = überrundet worden
+      lapPoints: 0,      // Punkte aus Überrundungen (nur lapdownMode=points)
       dnf: false,
       finishPosition: null,
       lastScoringPoints: 0,
       scoringHistory: [], // Punkte pro Wertungsrunde
-      eliminated: false,  // Ausscheidungsrennen
+      eliminated: false,   // Ausscheidungsrennen
+      eliminationOrder: null, // 0 = zuerst ausgeschieden (letzter Platz)
     };
   }
+
+  let eliminationCounter = 0;
 
   // ---- Anzahl Wertungsrunden bestimmen ----
   const totalRounds = race.rounds || 0;
@@ -58,15 +62,13 @@ export function computeResults(race, entries) {
       if (!s) continue;
 
       if (race.lapdownMode === "points") {
-        if (entry.type === "lapup") {
-          s.points += race.lapdownPointsWin ?? 0;
-        } else {
-          s.points -= race.lapdownPointsLoss ?? 0;
-        }
-      } else {
-        // lapped mode: nur Rundenstand tracken
-        s.laps += entry.type === "lapup" ? 1 : -1;
+        const pts = entry.type === "lapup"
+          ? (race.lapdownPointsWin ?? 0)
+          : -(race.lapdownPointsLoss ?? 0);
+        s.points += pts;
+        s.lapPoints += pts;
       }
+      s.laps += entry.type === "lapup" ? 1 : -1;
       continue;
     }
 
@@ -129,11 +131,14 @@ export function computeResults(race, entries) {
         });
 
       } else if (modeSlug === "elimination") {
-        // Ausscheidungsrennen: letzter scheidet aus
-        if (positions.length > 0) {
-          const lastNr = positions[positions.length - 1];
-          if (state[lastNr]) state[lastNr].eliminated = true;
-        }
+        // Ausscheidungsrennen: alle eingetragenen Nummern scheiden aus
+        // Reihenfolge bestimmt den Platz: zuerst eingetragen = zuletzt ausgeschieden = besser
+        positions.forEach((nr) => {
+          if (state[nr] && !state[nr].eliminated) {
+            state[nr].eliminated = true;
+            state[nr].eliminationOrder = eliminationCounter++;
+          }
+        });
       }
       // scratch: keine Wertung während des Rennens, nur Zieleinlauf zählt
     }
@@ -148,11 +153,12 @@ export function computeResults(race, entries) {
   }
 
   if (modeSlug === "elimination") {
-    // Noch aktive Fahrer zuerst (nach Zieleinlauf), dann Ausgeschiedene
     const active = allEntries.filter((s) => !s.eliminated && !s.dnf);
     const elim = allEntries.filter((s) => s.eliminated);
     const dnf = allEntries.filter((s) => s.dnf && !s.eliminated);
-    return [...sortByFinish(active), ...elim.reverse(), ...dnf];
+    // Höherer eliminationOrder = später ausgeschieden = besserer Platz
+    elim.sort((a, b) => b.eliminationOrder - a.eliminationOrder);
+    return [...sortByFinish(active), ...elim, ...dnf];
   }
 
   // Punktemodi: Punkte absteigend; bei Gleichstand letzte Wertung; danach Zieleinlauf

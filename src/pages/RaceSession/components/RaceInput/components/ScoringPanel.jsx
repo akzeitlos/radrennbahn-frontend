@@ -24,9 +24,13 @@ const ScoringPanel = ({
   scoringRoundCount,
   nextScoringRound,
   finishPositionOffset = 0,
+  isElimination = false,
+  activeCount = null,
+  minPositions = 1,
 }) => {
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") onAddNumber();
+    if (e.key !== "Enter") return;
+    numberInput.trim() ? onAddNumber() : onConfirm();
   };
 
   return (
@@ -39,7 +43,7 @@ const ScoringPanel = ({
         onKeyDown={handleKeyDown}
       />
 
-      <PositionChips positions={currentPositions} onRemove={onRemovePosition} />
+      <PositionChips positions={currentPositions} onRemove={onRemovePosition} isElimination={isElimination} />
 
       {isFinaleActive && (
         <div className="race-input__finale-finish">
@@ -51,7 +55,7 @@ const ScoringPanel = ({
             value={finishInput}
             onChange={(e) => setFinishInput(e.target.value)}
             onAdd={onAddFinishNumber}
-            onKeyDown={(e) => { if (e.key === "Enter") onAddFinishNumber(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { finishInput.trim() ? onAddFinishNumber() : onConfirm(); } }}
           />
           <PositionChips
             positions={finishPositions}
@@ -64,13 +68,21 @@ const ScoringPanel = ({
       <Button
         style="success"
         onClick={onConfirm}
-        disabled={currentPositions.length === 0}
+        disabled={isElimination
+          ? activeCount == null || currentPositions.length < activeCount - 1
+          : currentPositions.length < minPositions}
       >
-        {isLastScoringRound ? "Finale Wertung bestätigen" : "Wertung bestätigen"}
+        {isElimination
+          ? "Ausscheidung bestätigen"
+          : isLastScoringRound
+          ? "Finale Wertung bestätigen"
+          : "Wertung bestätigen"}
       </Button>
 
       <p className="race-input__hint">
-        {scoringDone >= scoringRoundCount
+        {isElimination
+          ? activeCount != null ? `${activeCount - currentPositions.length} Fahrer noch aktiv` : ""
+          : scoringDone >= scoringRoundCount
           ? "Alle Wertungsrunden abgeschlossen."
           : `Wertungsrunde ${nextScoringRound} von ${scoringRoundCount}${isLastScoringRound ? " — doppelte Punkte!" : ""}`}
       </p>

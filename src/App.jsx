@@ -11,6 +11,7 @@ import "./styles/variables.css";
 import "./styles/fonts.css";
 import "./styles/clearing.css";
 import "./App.css";
+import "./styles/responsive.css";
 
 // Inline definierte AppContent-Komponente
 const AppContent = () => {

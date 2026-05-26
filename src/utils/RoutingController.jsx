@@ -10,6 +10,7 @@ import Profile from "@/pages/Profile/Profile.jsx";
 import Clubs from "@/pages/Clubs/Clubs.jsx";
 import RaceClasses from "@/pages/RaceClasses/RaceClasses.jsx";
 import Races from "@/pages/Races/Races.jsx";
+import Archive from "@/pages/Archive/Archive.jsx";
 import RaceSession from "@/pages/RaceSession/RaceSession.jsx";
 import RaceModes from "@/pages/RaceModes/RaceModes.jsx";
 import ResetPassword from "@/pages/Auth/ResetPassword/ResetPassword";
@@ -69,6 +70,15 @@ const RoutingController = ({ token, isAuthenticated }) => {
             element={
               <ProtectedRoute>
                 <RaceSession />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/archive"
+            element={
+              <ProtectedRoute>
+                <Archive />
               </ProtectedRoute>
             }
           />

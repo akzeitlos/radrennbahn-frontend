@@ -73,6 +73,19 @@
   color: var(--color-red);
 }
 
+.race-input__position-chip--elim {
+  background: var(--color-light-red, #fce7f3);
+}
+
+.race-input__position-chip--elim .race-input__pos-rank {
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.race-input__position-chip--elim .race-input__pos-nr {
+  color: var(--color-dark-red, #600000);
+}
+
 /* Lap actions */
 .race-input__lap-actions {
   display: flex;

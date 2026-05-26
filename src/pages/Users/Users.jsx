@@ -6,39 +6,28 @@ import { AuthContext } from "@/context/AuthContext.jsx";
 import DeleteCard from "@/components/DeleteCard/DeleteCard.jsx";
 import UserForm from "@/components/Forms/UserForm.jsx";
 import useRoles from "@/hooks/useRoles.jsx";
-
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
-import UserEditCard from "@/components/UserEditCard/UserEditCard.jsx";
 
 import "./Users.css";
 
+const emptyForm = {
+  email: "",
+  username: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  roles: [],
+};
+
 const Users = () => {
-  // Get the auth token from context to authenticate API calls
   const { token, user, setUser } = useContext(AuthContext);
-  // Load users and user management functions from the custom hook
-  const { users, createUser, updateUser, deleteUser, error, isLoading } =
-    useUsers(token);
-
-  // Local state to track the user currently selected for deletion
-  const [userToDelete, setUserToDelete] = useState(null);
-
-  // Local state to track the user currently being edited (null if creating a new one)
-  const [editingUser, setEditingUser] = useState(null);
-
-  // Controls whether the form (edit or add) is currently shown
-  const [showForm, setShowForm] = useState(false);
-
+  const { users, createUser, updateUser, deleteUser, error, isLoading } = useUsers(token);
   const { roles } = useRoles(token);
 
-  // Form input state for name and description
-  const [formData, setFormData] = useState({
-    email: "",
-    username: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    roles: [],
-  });
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState(emptyForm);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,36 +37,22 @@ const Users = () => {
       roles: formData.roles.map((id) => Number(id)),
     };
 
-    let result;
-
     try {
+      let result;
+
       if (editingUser) {
-        // User updaten
         result = await updateUser(editingUser.id, payload);
 
         if (result.success) {
-          const updatedUser = result.user; // updatedUser kommt von updateUser
-
-          setFormData({
-            ...updatedUser,
-            roles: updatedUser.roles?.map((r) => r.id) || [],
-            password: "", // Passwort leer lassen
-          });
+          const updatedUser = result.user;
+          setFormData({ ...updatedUser, roles: updatedUser.roles?.map((r) => r.id) || [], password: "" });
           setEditingUser(updatedUser);
         }
       } else {
-        // User anlegen
         result = await createUser(payload);
 
         if (result.success) {
-          setFormData({
-            email: "",
-            username: "",
-            firstname: "",
-            lastname: "",
-            password: "",
-            roles: [],
-          });
+          setFormData(emptyForm);
           setEditingUser(null);
         }
       }
@@ -86,101 +61,68 @@ const Users = () => {
         if (editingUser && editingUser.id === user.id) {
           setUser(result.user);
         }
-
         setShowForm(false);
       }
-    } catch (error) {
-      console.error("Fehler beim Speichern:", error);
+    } catch (err) {
+      console.error("Fehler beim Speichern:", err);
     }
   };
 
-  // Updates form state whenever user types something
-  function handleInputChange(e) {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  }
+  };
 
-  // Called when user clicks "Edit" on a user card
-  const handleEdit = (user) => {
-    setEditingUser(user);
-    console.log("user", user);
+  const handleEdit = (u) => {
+    setEditingUser(u);
     setFormData({
-      email: user.email || "",
-      username: user.username || "",
-      firstname: user.firstname || "",
-      lastname: user.lastname || "",
+      email: u.email || "",
+      username: u.username || "",
+      firstname: u.firstname || "",
+      lastname: u.lastname || "",
       password: "",
-      roles: user.roles?.map((role) => role.id) || [],
+      roles: u.roles?.map((role) => role.id) || [],
     });
-    console.log("formdata:", formData);
-
     setShowForm(true);
   };
 
-  // Called when user clicks the "Add" button
   const handleAdd = () => {
     setEditingUser(null);
-    setFormData({
-      email: "",
-      username: "",
-      firstname: "",
-      lastname: "",
-      password: "",
-      roles: [],
-    });
+    setFormData(emptyForm);
     setShowForm(true);
   };
 
-  // Called when user clicks "Delete" on a card
-  const handleDelete = (user) => {
-    setUserToDelete(user); // Show the delete confirmation UI for this user
-  };
-
-  // Called when user confirms the deletion
   const confirmDelete = async (id) => {
     const result = await deleteUser(id);
-    if (result.success) {
-      setUserToDelete(null); // Hide the delete confirmation
-    }
+    if (result.success) setUserToDelete(null);
   };
 
-  // Called when user cancels the deletion
-  const cancelDelete = () => {
-    setUserToDelete(null); // Just hide the delete confirmation UI
-  };
   return (
     <>
       <h1>Nutzer-Verwaltung</h1>
       {isLoading ? (
-        <LoadingSpinner /> // Spinner, Text oder Skeleton
+        <LoadingSpinner />
       ) : (
         <div className="card-container">
-          {/* Loop through each user and decide what UI to show for it */}
-          {users.map((user) => {
-            const isDeleting = userToDelete?.id === user.id;
-            const isEditing = editingUser?.id === user.id && showForm;
+          {users.map((u) => {
+            const isDeleting = userToDelete?.id === u.id;
+            const isEditing = editingUser?.id === u.id && showForm;
 
-            // If this user is selected for deletion, show the confirmation card
             if (isDeleting) {
               return (
                 <DeleteCard
-                  key={user.id}
-                  item={user}
+                  key={u.id}
+                  item={u}
                   title="Nutzer"
                   onConfirm={confirmDelete}
-                  onCancel={cancelDelete}
+                  onCancel={() => setUserToDelete(null)}
                 />
               );
             }
 
-            // If this user is being edited, show the edit form inside a card
             if (isEditing) {
               return (
-                <Card
-                  key={user.id}
-                  title="Nutzer bearbeiten"
-                  extraClass="card-edit"
-                >
+                <Card key={u.id} title="Nutzer bearbeiten" extraClass="card-edit">
                   <UserForm
                     formData={formData}
                     onChange={handleInputChange}
@@ -188,14 +130,7 @@ const Users = () => {
                     onCancel={() => {
                       setShowForm(false);
                       setEditingUser(null);
-                      setFormData({
-                        email: "",
-                        username: "",
-                        firstname: "",
-                        lastname: "",
-                        password: "",
-                        roles: [],
-                      });
+                      setFormData(emptyForm);
                     }}
                     roles={roles}
                     error={error}
@@ -204,22 +139,20 @@ const Users = () => {
               );
             }
 
-            // Otherwise, just show the normal user card with edit and delete options
             return (
               <Card
-                key={user.id}
-                title={`${user.firstname} ${user.lastname}`}
-                onEdit={() => handleEdit(user)}
-                onDelete={() => handleDelete(user)}
+                key={u.id}
+                title={`${u.firstname} ${u.lastname}`}
+                subtitle={u.email}
+                onEdit={() => handleEdit(u)}
+                onDelete={() => setUserToDelete(u)}
               />
             );
           })}
 
-          {/* At the bottom: either show the form for a new user or the "Add" button */}
           {showForm && !editingUser ? (
-            <Card title="Neue Nutzer" extraClass="card-edit">
+            <Card title="Neuer Nutzer" extraClass="card-edit">
               <UserForm
-                title="Neue Nutzer"
                 formData={formData}
                 onChange={handleInputChange}
                 onSubmit={handleSubmit}
@@ -232,8 +165,7 @@ const Users = () => {
               />
             </Card>
           ) : (
-            // Wenn kein Formular gezeigt wird, "Add" Button
-            <AddCard onClick={handleAdd} />
+            !showForm && <AddCard onClick={handleAdd} />
           )}
         </div>
       )}

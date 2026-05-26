@@ -26,7 +26,7 @@ const DnfPanel = ({ inputRef, dnfTarget, setDnfTarget, onDnf, dnfEntries, onRemo
         ref={inputRef}
         name="dnfTarget"
         type="number"
-        placeholder="Startnr."
+        placeholder="Startnummer"
         value={dnfTarget}
         onChange={(e) => setDnfTarget(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") onDnf(); }}

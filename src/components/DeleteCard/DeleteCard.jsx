@@ -10,7 +10,7 @@ const DeleteCard = ({ item, title, onConfirm, onCancel }) => {
       <p>
         Möchtest du den {title} <strong>{itemName}</strong> wirklich löschen?
       </p>
-      <div className="button-wrapper">
+      <div className="card__actions">
         <Button style="danger" onClick={() => onConfirm(item.id)}>
           Löschen
         </Button>

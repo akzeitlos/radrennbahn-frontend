@@ -134,18 +134,20 @@ const AthletesTable = ({ athletes, onEdit, onDelete, fetchAthleteRaceHistory }) 
                   >
                     {/* Spalte 1: Name + inline-Aktionen (Mobile) */}
                     <td className="athlete-table__td athlete-table__name">
-                      <button
-                        className="athlete-table__expand-btn"
-                        onClick={() => setExpandedId(isExpanded ? null : athlete.id)}
-                        title="Rennhistorie anzeigen"
-                      >
-                        <Chevron className={`icon expand-arrow ${isExpanded ? "expand-arrow--open" : ""}`} />
-                      </button>
-                      <span className="athlete-table__fullname">
-                        {athlete.lastname}, {athlete.firstname}
-                      </span>
-                      {/* Nur auf Mobile sichtbar */}
-                      <span className="athlete-table__actions-inline">{actionBtns}</span>
+                      <div className="athlete-table__name-inner">
+                        <button
+                          className="athlete-table__expand-btn"
+                          onClick={() => setExpandedId(isExpanded ? null : athlete.id)}
+                          title="Rennhistorie anzeigen"
+                        >
+                          <Chevron className={`icon expand-arrow ${isExpanded ? "expand-arrow--open" : ""}`} />
+                        </button>
+                        <span className="athlete-table__fullname">
+                          {athlete.lastname}, {athlete.firstname}
+                        </span>
+                        {/* Nur auf Mobile sichtbar */}
+                        <span className="athlete-table__actions-inline">{actionBtns}</span>
+                      </div>
                     </td>
 
                     {/* Spalte 2–5: auf Mobile in .athlete-table__mobile-meta gebündelt */}
@@ -158,14 +160,12 @@ const AthletesTable = ({ athletes, onEdit, onDelete, fetchAthleteRaceHistory }) 
                       </span>
                       {/* Mobile: alle Meta-Infos zusammen — wird auf Desktop ausgeblendet */}
                       <div className="athlete-table__mobile-meta">
-                        {athlete.raceNumber
-                          ? <span className="race-number">{athlete.raceNumber}</span>
-                          : null}
-                        <GenderBadge gender={athlete.gender} />
-                        <RaceClassBadges raceClasses={athlete.raceClasses} />
-                        {athlete.club?.name
-                          ? <span className="athlete-table__mobile-club">{athlete.club.name}</span>
-                          : null}
+                        <div className="athlete-table__mobile-row">
+                          {athlete.raceNumber && <span className="race-number">{athlete.raceNumber}</span>}
+                          <GenderBadge gender={athlete.gender} />
+                          <RaceClassBadges raceClasses={athlete.raceClasses} />
+                        </div>
+                        {athlete.club?.name && <span className="athlete-table__mobile-club">{athlete.club.name}</span>}
                       </div>
                     </td>
 

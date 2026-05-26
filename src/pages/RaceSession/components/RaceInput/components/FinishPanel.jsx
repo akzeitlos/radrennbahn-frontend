@@ -13,7 +13,8 @@ const FinishPanel = ({
   finishPositionOffset = 0,
 }) => {
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") onAddNumber();
+    if (e.key !== "Enter") return;
+    numberInput.trim() ? onAddNumber() : onConfirm();
   };
 
   return (
@@ -38,7 +39,6 @@ const FinishPanel = ({
       <Button
         style="success"
         onClick={onConfirm}
-        disabled={currentPositions.length === 0}
       >
         Zieleinlauf bestätigen
       </Button>

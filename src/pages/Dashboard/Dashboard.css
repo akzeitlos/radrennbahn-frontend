@@ -8,5 +8,5 @@
 }
 
 .dashboard-container p {
-  color: #555;
+  color: var(--color-dark-grey);
 }

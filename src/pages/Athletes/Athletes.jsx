@@ -1,6 +1,7 @@
 import { useState, useContext, useMemo } from "react";
 import Modal from "@/components/Modal/Modal.jsx";
 import Card from "@/components/Card/Card.jsx";
+import FormModal from "@/components/FormModal/FormModal.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner.jsx";
 
 import AthleteForm from "@/components/Forms/AthleteForm.jsx";
@@ -167,21 +168,19 @@ const Athletes = () => {
 
       {/* Formular-Modal */}
       {showForm && (
-        <div className="athletes-modal-overlay" onClick={closeForm}>
-          <div className="athletes-modal" onClick={(e) => e.stopPropagation()}>
-            <Card title={editingAthlete ? "Athlet bearbeiten" : "Neuer Athlet"}>
-              <AthleteForm
-                formData={formData}
-                onChange={handleInputChange}
-                onSubmit={handleSubmit}
-                onCancel={closeForm}
-                clubs={clubs}
-                raceClasses={raceClasses}
-                error={error}
-              />
-            </Card>
-          </div>
-        </div>
+        <FormModal onClose={closeForm}>
+          <Card title={editingAthlete ? "Athlet bearbeiten" : "Neuer Athlet"}>
+            <AthleteForm
+              formData={formData}
+              onChange={handleInputChange}
+              onSubmit={handleSubmit}
+              onCancel={closeForm}
+              clubs={clubs}
+              raceClasses={raceClasses}
+              error={error}
+            />
+          </Card>
+        </FormModal>
       )}
     </>
   );
