@@ -115,6 +115,7 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
       if (isPointsMode) {
         if (lapdownMode === "lapped" && a.laps !== b.laps) return false;
         if (a.points !== b.points) return false;
+        if (a.lastScoringRound !== b.lastScoringRound) return false;
         if (a.lastScoringPoints !== b.lastScoringPoints) return false;
         return a.finishPosition === b.finishPosition;
       }

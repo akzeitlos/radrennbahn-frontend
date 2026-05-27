@@ -30,6 +30,7 @@ export function computeResults(race, entries) {
       dnf: false,
       finishPosition: null,
       lastScoringPoints: 0,
+      lastScoringRound: 0,
       scoringHistory: [], // Punkte pro Wertungsrunde
       eliminated: false,   // Ausscheidungsrennen
       eliminationOrder: null, // 0 = zuerst ausgeschieden (letzter Platz)
@@ -103,6 +104,7 @@ export function computeResults(race, entries) {
           const pts = isThisLastRound ? basePoints[idx] * 2 : basePoints[idx];
           s.points += pts;
           s.lastScoringPoints = pts;
+          s.lastScoringRound = entry.roundNumber;
           s.scoringHistory.push(pts);
         });
 
@@ -116,6 +118,7 @@ export function computeResults(race, entries) {
           const pts = dist[idx] ?? 0;
           s.points += pts;
           s.lastScoringPoints = pts;
+          s.lastScoringRound = entry.roundNumber;
           s.scoringHistory.push(pts);
         });
 
@@ -127,6 +130,7 @@ export function computeResults(race, entries) {
           if (!s || idx >= tempoPoints.length) return;
           s.points += tempoPoints[idx];
           s.lastScoringPoints = tempoPoints[idx];
+          s.lastScoringRound = entry.roundNumber;
           s.scoringHistory.push(tempoPoints[idx]);
         });
 
@@ -171,16 +175,16 @@ export function computeResults(race, entries) {
       active.sort((a, b) => {
         if (b.laps !== a.laps) return b.laps - a.laps;
         if (b.points !== a.points) return b.points - a.points;
-        if (b.lastScoringPoints !== a.lastScoringPoints)
-          return b.lastScoringPoints - a.lastScoringPoints;
+        if (b.lastScoringRound !== a.lastScoringRound) return b.lastScoringRound - a.lastScoringRound;
+        if (b.lastScoringPoints !== a.lastScoringPoints) return b.lastScoringPoints - a.lastScoringPoints;
         return compareFinish(a, b);
       });
     } else {
       // Überrundung in Punkte umgerechnet (bereits im State)
       active.sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
-        if (b.lastScoringPoints !== a.lastScoringPoints)
-          return b.lastScoringPoints - a.lastScoringPoints;
+        if (b.lastScoringRound !== a.lastScoringRound) return b.lastScoringRound - a.lastScoringRound;
+        if (b.lastScoringPoints !== a.lastScoringPoints) return b.lastScoringPoints - a.lastScoringPoints;
         return compareFinish(a, b);
       });
     }
