@@ -196,6 +196,42 @@ export function computeResults(race, entries) {
   return allEntries;
 }
 
+/**
+ * Baut eine Map athleteNumber → Platzziffer mit korrekter Gleichstandsbehandlung.
+ * Dieselbe Logik wie im Web-Ranking (RaceResults.jsx).
+ */
+export function buildRankMap(results, modeSlug, lapdownMode) {
+  const isPointsMode = ["points", "danish", "tempo"].includes(modeSlug);
+
+  if (modeSlug === "elimination") {
+    const map = new Map();
+    results.filter((r) => !r.dnf).forEach((r, i) => map.set(r.athleteNumber, i + 1));
+    return map;
+  }
+
+  const isTied = (a, b) => {
+    if (modeSlug === "scratch") return a.finishPosition === b.finishPosition;
+    if (isPointsMode) {
+      if (lapdownMode === "lapped" && a.laps !== b.laps) return false;
+      if (a.points !== b.points) return false;
+      if ((a.lastScoringRound ?? 0) !== (b.lastScoringRound ?? 0)) return false;
+      if (a.lastScoringPoints !== b.lastScoringPoints) return false;
+      return a.finishPosition === b.finishPosition;
+    }
+    return false;
+  };
+
+  const active = results.filter((r) => !r.dnf && !r.eliminated);
+  const map = new Map();
+  active.forEach((r, i) => {
+    const rank = i === 0 || !isTied(r, active[i - 1])
+      ? i + 1
+      : map.get(active[i - 1].athleteNumber);
+    map.set(r.athleteNumber, rank);
+  });
+  return map;
+}
+
 function sortByFinish(list) {
   return [...list].sort((a, b) => {
     if (a.finishPosition !== null && b.finishPosition !== null)

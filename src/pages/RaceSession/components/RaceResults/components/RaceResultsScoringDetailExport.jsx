@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { buildRankMap } from "@/pages/RaceSession/utils/computeResults.js";
 import Button from "@/components/Button/Button.jsx";
 import PdfIconAsset from "@/assets/icons/pdf.svg?react";
 import SpinnerIconAsset from "@/assets/icons/spinner.svg?react";
@@ -222,9 +223,9 @@ const ScoringDetailDocument = ({ entries, race, modeSlug, results }) => {
 
         {/* Zeilen */}
         {(() => {
-          let rank = 1;
+          const rankMap = buildRankMap(athletes, modeSlug, race.lapdownMode);
           return athletes.map((r, idx) => {
-            const currentRank = r.dnf || r.eliminated ? null : rank++;
+            const currentRank = r.dnf || r.eliminated ? null : (rankMap.get(r.athleteNumber) ?? null);
             const isAlt    = idx % 2 === 1;
             const res      = results.find((res) => res.athleteNumber === r.athleteNumber);
             const total    = res?.points ?? 0;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { buildRankMap } from "@/pages/RaceSession/utils/computeResults.js";
 import Button from "@/components/Button/Button.jsx";
 import PdfIconAsset from "@/assets/icons/pdf.svg?react";
 import SpinnerIconAsset from "@/assets/icons/spinner.svg?react";
@@ -212,12 +213,7 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
 
         {/* Zeilen */}
         {(() => {
-          const rankMap = new Map();
-          if (modeSlug === "elimination") {
-            results.filter((r) => !r.dnf).forEach((r, i) => rankMap.set(r.athleteNumber, i + 1));
-          } else {
-            results.filter((r) => !r.dnf && !r.eliminated).forEach((r, i) => rankMap.set(r.athleteNumber, i + 1));
-          }
+          const rankMap = buildRankMap(results, modeSlug, race.lapdownMode);
           return results.map((r, idx) => {
           const rank = r.dnf ? null : (rankMap.get(r.athleteNumber) ?? null);
           const rankLabel = rank ? String(rank) : "—";
