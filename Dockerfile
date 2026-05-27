@@ -16,7 +16,7 @@ CMD ["npm", "run", "dev", "--", "--host"]
 #############################
 # 👉 Production Stage
 #############################
-FROM node:22-alpine AS build
+FROM node:22-alpine AS prod
 
 WORKDIR /app
 
@@ -25,11 +25,11 @@ RUN npm install -g serve && npm install
 
 COPY . .
 
-#Server zu schwach
-RUN npm run build
+# VITE_API_URL wird zur Build-Zeit eingebrannt
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
-# Optional: .htaccess für client-side routing
-COPY .htaccess ./dist/
+RUN npm run build
 
 EXPOSE 3000
 CMD ["serve", "-s", "dist", "-l", "3000"]
