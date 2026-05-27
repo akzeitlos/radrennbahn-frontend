@@ -5,14 +5,14 @@ services:
       dockerfile: Dockerfile
       target: prod
       args:
-        VITE_API_URL: https://radrennbahn-backend.pushandpull.de/api
+        VITE_API_URL: https://radrennbahn-backend.pushandpull.app/api
     container_name: radrennbahn-frontend
     restart: always
     networks:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`radrennbahn.pushandpull.de`)"
+      - "traefik.http.routers.frontend.rule=Host(`radrennbahn.pushandpull.app`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
