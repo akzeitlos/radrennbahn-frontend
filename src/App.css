@@ -31,6 +31,7 @@ body {
 .app-layout {
   display: flex;
   height: 100vh;
+  height: 100dvh;
 }
 
 .main-content {
@@ -42,9 +43,9 @@ body {
   gap: 1.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 980px) {
   .main-content {
-    margin-top: 3rem;
+    margin-top: 4rem;
   }
 }
 

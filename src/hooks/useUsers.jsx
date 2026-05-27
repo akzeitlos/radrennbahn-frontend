@@ -3,9 +3,9 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-function useUsers(token) {
+function useUsers(token, { autoFetch = true } = {}) {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(autoFetch);
   const [error, setError] = useState(null);
 
   const fetchUsers = async () => {
@@ -27,7 +27,7 @@ function useUsers(token) {
 
   // useEffect ruft fetchUsers einmal beim Mount auf (und wenn token sich ändert)
   useEffect(() => {
-    fetchUsers();
+    if (autoFetch) fetchUsers();
   }, [token]);
 
   const createUser = async (formData) => {

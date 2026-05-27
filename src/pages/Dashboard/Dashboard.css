@@ -178,7 +178,7 @@
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 980px) {
   .dashboard__stats {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .dashboard__panels {

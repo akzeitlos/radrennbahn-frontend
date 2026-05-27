@@ -196,7 +196,8 @@ const Races = () => {
             return (
               <Card
                 key={race.id}
-                title={`${formattedDate}${raceClassNames ? ` · ${raceClassNames}` : ""}`}
+                title={formattedDate}
+                titleSub={raceClassNames}
                 subtitle={race.raceMode?.title || "-"}
                 onPlay={() => navigate(`/races/${race.id}/session`)}
                 isCompleted={race.isCompleted}

@@ -8,7 +8,7 @@ import { AuthContext } from "@/context/AuthContext.jsx";
 const Profile = () => {
   const { token, user, fetchUser } = useContext(AuthContext);
 
-  const { updateUser, error, isLoading } = useUsers(token);
+  const { updateUser, error, isLoading } = useUsers(token, { autoFetch: false });
 
   const [isSuccess, setIsSuccess] = useState(false);
 

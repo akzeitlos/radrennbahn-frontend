@@ -30,6 +30,22 @@
   color: var(--color-blue);
 }
 
+.card__title-sub::before {
+  content: ' · ';
+}
+
+@media (max-width: 980px) {
+  .card__title-sub {
+    display: block;
+  }
+  .card__title-sub::before {
+    display: none;
+  }
+  .hover-buttons {
+    opacity: 1;
+  }
+}
+
 .card__subtitle {
   color: var(--color-mid-grey);
   font-size: 0.85rem;

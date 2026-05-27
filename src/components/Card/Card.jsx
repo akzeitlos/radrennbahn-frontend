@@ -6,6 +6,7 @@ import Eye from "@/assets/icons/eye.svg?react";
 
 const Card = ({
   title,
+  titleSub,
   subtitle,
   children,
   aspectRatio = "",
@@ -20,7 +21,7 @@ const Card = ({
     <div className={`card ${aspectRatio} ${danger ? "card-danger" : ""} ${extraClass}`}>
       <div className="card-header">
         <div>
-          <h2>{title}</h2>
+          <h2>{title}{titleSub && <span className="card__title-sub">{titleSub}</span>}</h2>
           {subtitle && <p className="card__subtitle">{subtitle}</p>}
         </div>
         {!danger && (onEdit || onDelete || onPlay) && (

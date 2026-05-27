@@ -10,7 +10,8 @@
 
   .main-content {
     padding: 1.25rem;
-    padding-top: 4rem; /* Platz für Hamburger-Button */
+    padding-top: 0;
+    padding-bottom: 4rem;
     gap: 1rem;
   }
 
