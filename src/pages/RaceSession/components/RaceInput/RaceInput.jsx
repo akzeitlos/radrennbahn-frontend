@@ -38,6 +38,7 @@ const RaceInput = ({
     inputRef.current?.focus();
   }, [activePanel, currentPositions, activeScoringTab]);
 
+
   const isElimination = modeSlug === "elimination";
   const athletes = race.athletes ?? [];
   const totalRounds = race.rounds ?? 0;

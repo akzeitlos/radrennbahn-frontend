@@ -128,8 +128,8 @@ const RaceForm = ({
               value={formData.lapdownMode}
               onChange={onChange}
               options={[
-                { value: "lapped", label: "Überrundung registrieren" },
-                { value: "points", label: "Punkteverlust bei Überrundung" },
+                { value: "lapped", label: "Registrieren" },
+                { value: "points", label: "Punkteverlust" },
               ]}
             />
           )}
@@ -154,14 +154,14 @@ const RaceForm = ({
                 <>
                   <Input
                     name="lapdownPointsWin"
-                    label="Punkte bei Überrundung (Gewinn)"
+                    label="Überrundung Gewinn"
                     type="number"
                     value={formData.lapdownPointsWin}
                     onChange={onChange}
                   />
                   <Input
                     name="lapdownPointsLoss"
-                    label="Punkte bei Überrundung (Verlust)"
+                    label="Überrundung Verlust"
                     type="number"
                     value={formData.lapdownPointsLoss}
                     onChange={onChange}
@@ -224,10 +224,11 @@ const RaceForm = ({
           {/* Dänisches Punktegrid */}
           {isDanish && danishRowCount > 0 && (
             <div className="race-form__danish">
+              {/* Desktop: Grid */}
               <div
                 className="race-form__danish-grid"
                 style={{
-                  gridTemplateColumns: `auto repeat(${danishRowCount}, 1fr)`,
+                  gridTemplateColumns: `auto repeat(${danishRowCount}, auto)`,
                 }}
               >
                 <div className="race-form__danish-cell race-form__danish-cell--header" />
@@ -264,6 +265,32 @@ const RaceForm = ({
                       </div>
                     ))}
                   </>
+                ))}
+              </div>
+
+              {/* Mobile: gestapelt */}
+              <div className="race-form__danish-mobile">
+                {Array.from({ length: danishRowCount }, (_, rowIndex) => (
+                  <div key={rowIndex} className="race-form__danish-round">
+                    <div className="race-form__danish-round-title">
+                      {rowIndex + 1}. Wertung
+                    </div>
+                    {Array.from({ length: maxPlaces }, (_, colIndex) => (
+                      <div key={colIndex} className="race-form__danish-round-row">
+                        <span className="race-form__danish-round-label">
+                          Platz {colIndex + 1}
+                        </span>
+                        <Input
+                          name={`danish-m-${rowIndex}-${colIndex}`}
+                          type="number"
+                          value={getDanishValue(rowIndex, colIndex)}
+                          onChange={(e) =>
+                            setDanishValue(rowIndex, colIndex, e.target.value)
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>

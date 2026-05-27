@@ -126,26 +126,41 @@
 
   /* ── Race Results Tabelle ─────────────────────────────────── */
 
-  /* Horizontales Scrollen für die Tabelle */
   .race-results__table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-left: -0.1rem;
   }
 
   .race-results__table {
-    min-width: 480px;
+    min-width: unset;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 0.82rem;
   }
 
-  /* Weniger wichtige Spalten ausblenden */
+  .race-results__table thead th,
+  .race-results__table tbody td {
+    padding: 0.35rem 0.4rem;
+  }
+
   .race-results__col-club,
   th.race-results__col-club,
   td.race-results__col-club,
   .race-results__col-classes,
   th.race-results__col-classes,
-  td.race-results__col-classes {
+  td.race-results__col-classes,
+  .race-results__col-gender,
+  th.race-results__col-gender,
+  td.race-results__col-gender {
     display: none;
   }
+
+  .race-results__col-rank   { width: 2rem; }
+  .race-results__col-nr     { width: 2.4rem; }
+  .race-results__col-name   { min-width: unset; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .race-results__col-pts    { width: 4rem; }
+  .race-results__col-laps   { width: 3rem; }
+  .race-results__col-status { width: 3rem; }
 
   /* ── Race Form ────────────────────────────────────────────── */
 

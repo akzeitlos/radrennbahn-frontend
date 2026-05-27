@@ -2,6 +2,24 @@
   min-height: unset !important;
 }
 
+.race-results__tools {
+  min-height: unset !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.race-results__tools > .button {
+  align-self: flex-end;
+}
+
+@media (max-width: 980px) {
+  .race-results__tools > .button {
+    align-self: stretch;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .race-results__header-row {
   display: flex;
   align-items: center;
@@ -112,6 +130,37 @@
 }
 
 .rr-dash { color: var(--color-mid-grey); }
+
+.rr-expand-row { display: none; }
+
+.rr-expand-content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.3rem 0;
+}
+
+.rr-expand-content__club {
+  font-size: 0.78rem;
+  color: var(--color-mid-grey);
+}
+
+@media (max-width: 980px) {
+  .race-results__row--clickable {
+    cursor: pointer;
+  }
+
+  .rr-expand-row {
+    display: table-row;
+    background: var(--color-light-grey);
+  }
+
+  .rr-expand-row td {
+    padding: 0.3rem 0.6rem 0.5rem 2.8rem;
+    border-bottom: 1px solid var(--color-light-grey);
+  }
+}
 
 /* Punkte */
 .race-results__last-pts {

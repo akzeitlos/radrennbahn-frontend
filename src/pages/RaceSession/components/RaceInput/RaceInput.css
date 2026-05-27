@@ -30,6 +30,16 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  flex-wrap: nowrap;
+}
+
+.race-input__entry-row .input-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.race-input__entry-row .button {
+  flex-shrink: 0;
 }
 
 /* Positions-Chips */
@@ -199,4 +209,11 @@
 .race-input__edit-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+@media (max-width: 980px) {
+  .race-input__edit-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
 }

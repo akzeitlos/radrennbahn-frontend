@@ -26,7 +26,8 @@ const RaceSession = () => {
 
   const [entries, setEntries] = useState([]);
   const [pendingPositions, setPendingPositions] = useState([]);
-  const [saveState, setSaveState] = useState("idle");
+  const [saveState, setSaveState] = useState("saved");
+  const [isDirty, setIsDirty] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
@@ -66,16 +67,19 @@ const RaceSession = () => {
   const addEntry = useCallback((entry) => {
     setEntries((prev) => [...prev, entry]);
     setSaveState("idle");
+    setIsDirty(true);
   }, []);
 
   const removeEntry = useCallback((index) => {
     setEntries((prev) => prev.filter((_, i) => i !== index));
     setSaveState("idle");
+    setIsDirty(true);
   }, []);
 
   const updateEntry = useCallback((index, entry) => {
     setEntries((prev) => prev.map((e, i) => (i === index ? entry : e)));
     setSaveState("idle");
+    setIsDirty(true);
   }, []);
 
   const resetFinalRound = useCallback((scoringIndex) => {
@@ -83,7 +87,12 @@ const RaceSession = () => {
       prev.filter((e, i) => i !== scoringIndex && e.type !== "finish"),
     );
     setSaveState("idle");
+    setIsDirty(true);
   }, []);
+
+  useEffect(() => {
+    if (pendingPositions.length > 0) setSaveState((s) => s === "saved" ? "idle" : s);
+  }, [pendingPositions]);
 
   const handleSave = async () => {
     if (!race) return;
@@ -103,6 +112,7 @@ const RaceSession = () => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
       setSaveState("saved");
+      setIsDirty(false);
     } catch {
       setSaveState("error");
     }
@@ -184,7 +194,7 @@ const RaceSession = () => {
 
         <div className="race-session__actions">
           <Button
-            saveState={saveState}
+            saveState={isDirty ? "idle" : saveState}
             onClick={handleSave}
             disabled={entries.length === 0}
           >

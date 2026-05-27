@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  height: 100%;
 }
 
 .race-session__header {
@@ -35,6 +34,17 @@
 }
 
 
+
+@media (max-width: 980px) {
+  .race-session__actions {
+    flex-direction: column;
+  }
+
+  .race-session__actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 .race-session__not-found {
   color: var(--color-white);

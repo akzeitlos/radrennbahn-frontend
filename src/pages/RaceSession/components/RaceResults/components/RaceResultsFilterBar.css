@@ -2,10 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  padding: 2rem;
-  border: 1px solid var(--color-dark-grey);
-  border-radius: var(--border-radius-medium);
-  margin-bottom: 0.75rem;
 }
 
 .rr-filter-bar__top {
@@ -37,7 +33,13 @@
 .rr-filter-bar__gender-group {
   display: flex;
   gap: 0.4rem;
-  flex-shrink: 0;
+  flex: 1;
+}
+
+.rr-filter-bar__gender-group .button {
+  flex: 1;
+  width: auto;
+  justify-content: center;
 }
 
 .rr-filter-bar__classes {
@@ -59,6 +61,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-light-blue);
 }
 
 .rr-filter-bar__count {

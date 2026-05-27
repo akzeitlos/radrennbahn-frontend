@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import RaceResultsFilterBar from "./components/RaceResultsFilterBar.jsx";
 import RaceResultsPdfExport from "./components/RaceResultsPdfExport.jsx";
+import Button from "@/components/Button/Button.jsx";
 import Male from "@/assets/icons/male.svg?react";
 import Female from "@/assets/icons/female.svg?react";
 import "./RaceResults.css";
@@ -85,6 +86,15 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
   }, [athletes]);
 
   const [filters, setFilters] = useState({ gender: "", raceClassIds: [] });
+  const isFilterActive = filters.gender || filters.raceClassIds.length > 0;
+  const handleResetFilters = () => setFilters({ gender: "", raceClassIds: [] });
+
+  const [expandedRows, setExpandedRows] = useState(new Set());
+  const toggleRow = (nr) => setExpandedRows((prev) => {
+    const next = new Set(prev);
+    next.has(nr) ? next.delete(nr) : next.add(nr);
+    return next;
+  });
 
   const filteredResults = useMemo(
     () => applyFilters(results, athletes, filters),
@@ -122,6 +132,7 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
   }, [filteredResults, modeSlug, isPointsMode, lapdownMode]);
 
   return (
+    <>
     <div className="race-results card">
       {/* Header-Zeile */}
       <div className="race-results__header-row">
@@ -132,26 +143,8 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
               Wertungen: {scoringCount} / {scoringRoundCount}
             </span>
           )}
-          <RaceResultsPdfExport
-            results={filteredResults}
-            race={race}
-            modeSlug={modeSlug}
-            filters={filters}
-            raceClasses={raceClasses}
-          />
         </div>
       </div>
-
-      {/* Filterleiste */}
-      {results.length > 0 && (
-        <RaceResultsFilterBar
-          filters={filters}
-          onChange={setFilters}
-          raceClasses={raceClasses}
-          totalCount={results.length}
-          filteredCount={filteredResults.length}
-        />
-      )}
 
       {/* Tabelle */}
       {filteredResults.length === 0 ? (
@@ -167,8 +160,8 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
                 <th className="race-results__col-nr">Nr.</th>
                 <th className="race-results__col-name">Name</th>
                 <th className="race-results__col-gender">Geschl.</th>
-                <th className="race-results__col-club">Verein</th>
                 <th className="race-results__col-classes">Klasse(n)</th>
+                <th className="race-results__col-club">Verein</th>
                 {showPoints && <th className="race-results__col-pts">Punkte</th>}
                 {showLaps && <th className="race-results__col-laps">{lapdownMode === "points" ? "Überr." : "Runden"}</th>}
                 <th className="race-results__col-status">Status</th>
@@ -185,8 +178,15 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
                   : "";
                 const athlete = athletes.find((a) => a.raceNumber === r.athleteNumber);
 
+                const isExpanded = expandedRows.has(r.athleteNumber);
+                const colSpan = 3 + (showPoints ? 1 : 0) + (showLaps ? 1 : 0) + 1;
+
                 return (
-                  <tr key={r.athleteNumber} className={`race-results__row ${rowClass}`}>
+                  <Fragment key={r.athleteNumber}>
+                  <tr
+                    className={`race-results__row race-results__row--clickable ${rowClass}`}
+                    onClick={() => toggleRow(r.athleteNumber)}
+                  >
                     <td className="race-results__col-rank">
                       {medal ?? (rank ? rank : "—")}
                     </td>
@@ -195,11 +195,11 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
                     <td className="race-results__col-gender">
                       <GenderBadge gender={athlete?.gender} />
                     </td>
-                    <td className="race-results__col-club">
-                      {athlete?.club?.name ?? <span className="rr-dash">—</span>}
-                    </td>
                     <td className="race-results__col-classes">
                       <RaceClassBadges raceClasses={athlete?.raceClasses} />
+                    </td>
+                    <td className="race-results__col-club">
+                      {athlete?.club?.name ?? <span className="rr-dash">—</span>}
                     </td>
                     {showPoints && (
                       <td className="race-results__col-pts">
@@ -240,6 +240,22 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
                       )}
                     </td>
                   </tr>
+                  {isExpanded && (
+                    <tr className="rr-expand-row">
+                      <td colSpan={colSpan}>
+                        <div className="rr-expand-content">
+                          <GenderBadge gender={athlete?.gender} />
+                          {athlete?.raceClasses?.length > 0 && (
+                            <RaceClassBadges raceClasses={athlete.raceClasses} />
+                          )}
+                          {athlete?.club?.name && (
+                            <span className="rr-expand-content__club">{athlete.club.name}</span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 );
               })}
             </tbody>
@@ -247,6 +263,34 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
         </div>
       )}
     </div>
+
+    {results.length > 0 && (
+      <div className="race-results__tools card">
+        <RaceResultsFilterBar
+          filters={filters}
+          onChange={setFilters}
+          raceClasses={raceClasses}
+        />
+        <RaceResultsPdfExport
+          results={filteredResults}
+          race={race}
+          modeSlug={modeSlug}
+          filters={filters}
+          raceClasses={raceClasses}
+        />
+        <div className="rr-filter-bar__meta">
+          <span className="rr-filter-bar__count">
+            {filteredResults.length} von {results.length} Startern
+          </span>
+          {isFilterActive && (
+            <Button style="secondary" small onClick={handleResetFilters}>
+              Filter zurücksetzen
+            </Button>
+          )}
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 

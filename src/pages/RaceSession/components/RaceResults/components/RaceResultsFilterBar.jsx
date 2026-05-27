@@ -8,14 +8,9 @@ const RaceResultsFilterBar = ({
   filters,
   onChange,
   raceClasses,
-  totalCount,
-  filteredCount,
 }) => {
   const handleGender = (val) =>
     onChange({ ...filters, gender: filters.gender === val ? "" : val });
-  const handleReset  = () => onChange({ gender: "", raceClassIds: [] });
-
-  const isActive = filters.gender || filters.raceClassIds.length > 0;
 
   return (
     <div className="rr-filter-bar">
@@ -51,17 +46,6 @@ const RaceResultsFilterBar = ({
           />
         </div>
       )}
-
-      <div className="rr-filter-bar__meta">
-        <span className="rr-filter-bar__count">
-          {filteredCount} von {totalCount} Startern
-        </span>
-        {isActive && (
-          <Button style="secondary" small onClick={handleReset}>
-            Filter zurücksetzen
-          </Button>
-        )}
-      </div>
     </div>
   );
 };
