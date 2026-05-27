@@ -24,7 +24,7 @@ const Archive = () => {
       {isLoading ? (
         <LoadingSpinner />
       ) : pastRaces.length === 0 ? (
-        <p>Noch keine archivierten Rennen.</p>
+        <p className="archive-empty">Noch keine archivierten Rennen.</p>
       ) : (
         <div className="card-container">
           {pastRaces.map((race) => {
