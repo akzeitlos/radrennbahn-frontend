@@ -8,13 +8,19 @@
   flex-direction: column;
 }
 
-.race-results__tools > .button {
+.race-results__export-row {
+  display: flex;
+  gap: 0.5rem;
   align-self: flex-end;
 }
 
 @media (max-width: 980px) {
-  .race-results__tools > .button {
+  .race-results__export-row {
     align-self: stretch;
+    flex-direction: column;
+  }
+
+  .race-results__export-row .button {
     width: 100%;
     justify-content: center;
   }

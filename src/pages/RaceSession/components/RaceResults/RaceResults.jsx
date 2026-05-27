@@ -1,6 +1,7 @@
 import { useState, useMemo, Fragment } from "react";
 import RaceResultsFilterBar from "./components/RaceResultsFilterBar.jsx";
 import RaceResultsPdfExport from "./components/RaceResultsPdfExport.jsx";
+import RaceResultsScoringDetailExport from "./components/RaceResultsScoringDetailExport.jsx";
 import Button from "@/components/Button/Button.jsx";
 import Male from "@/assets/icons/male.svg?react";
 import Female from "@/assets/icons/female.svg?react";
@@ -272,13 +273,21 @@ const RaceResults = ({ race, modeSlug, results, entries }) => {
           onChange={setFilters}
           raceClasses={raceClasses}
         />
-        <RaceResultsPdfExport
-          results={filteredResults}
-          race={race}
-          modeSlug={modeSlug}
-          filters={filters}
-          raceClasses={raceClasses}
-        />
+        <div className="race-results__export-row">
+          <RaceResultsPdfExport
+            results={filteredResults}
+            race={race}
+            modeSlug={modeSlug}
+            filters={filters}
+            raceClasses={raceClasses}
+          />
+          <RaceResultsScoringDetailExport
+            entries={entries}
+            race={race}
+            modeSlug={modeSlug}
+            results={filteredResults}
+          />
+        </div>
         <div className="rr-filter-bar__meta">
           <span className="rr-filter-bar__count">
             {filteredResults.length} von {results.length} Startern

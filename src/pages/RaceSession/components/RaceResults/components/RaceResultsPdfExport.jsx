@@ -194,10 +194,7 @@ const RaceResultsPdfDocument = ({ results, race, modeSlug, filters, raceClasses 
               <Text style={styles.filterLine}>Filter: {filterLabels.join(" · ")}</Text>
             )}
           </View>
-          <View style={styles.metaBlock}>
-            <Text style={styles.metaCount}>{results.length} Starter</Text>
-            <Text style={styles.metaDate}>Stand: {now}</Text>
-          </View>
+          <Text style={styles.metaCount}>{results.length} Starter</Text>
         </View>
 
         {/* Tabellen-Header */}
@@ -326,7 +323,7 @@ const RaceResultsPdfExport = ({ results, race, modeSlug, filters, raceClasses })
       onClick={handleDownload}
       disabled={loading || results.length === 0}
     >
-      {loading ? <><SpinnerIcon />PDF wird erstellt …</> : <><PdfIcon />PDF exportieren</>}
+      {loading ? <><SpinnerIcon />PDF wird erstellt …</> : <><PdfIcon />PDF Ergebnisse</>}
     </Button>
   );
 };
